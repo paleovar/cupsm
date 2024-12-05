@@ -34,8 +34,7 @@ extensions = [
 #    'sphinx.ext.napoleon'
 #   ]
 # Document Python Code
-autoapi_type = 'python'
-autoapi_dirs = '../cupsm'
+autoapi_dirs = ['../cupsm']
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
