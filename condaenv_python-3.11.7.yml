@@ -1,4 +1,4 @@
-name: condasky_p311
+name: cupsm_env_python-3.11.7
 channels:
   - conda-forge
   - defaults
