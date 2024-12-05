@@ -3,6 +3,5 @@ sphinx-rtd-theme
 numpy
 xarray
 pandas
-os
 lipd
 geopy
