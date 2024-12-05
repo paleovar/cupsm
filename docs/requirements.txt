@@ -1,5 +1,6 @@
 sphinx
 sphinx-rtd-theme
+sphinx-autoapi
 numpy
 xarray
 pandas
