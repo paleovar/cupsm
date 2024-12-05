@@ -5,3 +5,4 @@ xarray
 pandas
 lipd
 geopy
+cupsm
