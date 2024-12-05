@@ -34,6 +34,8 @@ extensions = [
 #    'sphinx.ext.napoleon'
 #   ]
 
+autoapi_dirs = ['../cupsm']
+
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
