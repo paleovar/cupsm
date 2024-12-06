@@ -109,9 +109,7 @@ def get_records_df(df, filename=None, sitename=None, location=None, loc_radius=N
                     If only two values are provided, elevation is ommitted
                     -> searches all files at filepath
     loc_radius:     will search for records in the interval location +/- loc_radius
-                    for the provided list in the format [lon, lat, m]
-    min_age:        Minumum age that should be covered (min_age < max_age; e.g. 12 ka < 19 ka)
-    max_age:        Maximum age that should be covered (min_age < max_age; e.g. 12 ka < 19 ka)
+                    for the provided list in the format [lon, lat, m], given in degrees and meters
     desired_data:   desired variable as str, must match definition in lipd file, 
                     e.g. 'surface.temp'
                     -> searches all files at filepath
@@ -208,7 +206,6 @@ def get_records_df(df, filename=None, sitename=None, location=None, loc_radius=N
         # select files which have the correct location
         loc_files, loc_paths = mask_location_return(loc=location,loc_r=loc_radius)
         if desired_data is None:
-            print(desired_data)
             return collect_check_return_list(loc_files, loc_paths)
         else:
             # select files which have the required data:
