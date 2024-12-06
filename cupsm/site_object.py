@@ -193,7 +193,6 @@ available datasets:
             else:
                 var_list.append(entry)
 
-
         # Check and prepare coordinates
         if coord not in ["depth", "age"]:
             raise KeyError(f"As coordinates, only 'depth' and 'age' are available.")
@@ -216,7 +215,7 @@ available datasets:
             name = var.replace(".", "_").replace("-", "_") #underscore are replaced here
             # get the data
             try:
-                data = np.array(lipd_data_dic[var]['values'], dtype=float)
+                data = np.array(lipd_data_dic[var]['values']).astype(float)
             except ValueError:
                 data = np.array(lipd_data_dic[var]['values'])
             # local attributes
@@ -258,7 +257,7 @@ available datasets:
         # create data set
         xr_ds = xr.Dataset(
             data_vars=data_dic,
-            coords={coord:np.array(lipd_data_dic[coord_name]['values'])},
+            coords={coord:np.array(lipd_data_dic[coord_name]['values']).astype(float)},
             attrs=attrs_dic
         )
 
