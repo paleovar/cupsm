@@ -17,4 +17,4 @@ Developers: *[Nils Weitzel](https://github.com/nilsweitzel), [Muriel Racky](http
 
 This work has been funded by the German Research Foundation (NFDI4Earth, DFG project no. 460036893, [https://www.nfdi4earth.de/](https://www.nfdi4earth.de/)).
 
-*The Authors, April 2024*
+*The Authors, December 2024*
