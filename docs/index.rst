@@ -16,7 +16,7 @@ Installation
 Acknowledgments
 ---------------------------------------
 
-This work has been funded by the German Research Foundation (`NFDI4Earth <https://www.nfdi4earth.de/>`, DFG project no. 460036893).
+This work has been funded by the German Research Foundation (`NFDI4Earth <https://www.nfdi4earth.de/>`_, DFG project no. 460036893).
 
 Documentation
 --------------
