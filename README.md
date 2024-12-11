@@ -6,7 +6,7 @@ cupsm is a python package for proxy system modeling that makes use of data cube 
 
 This package can be installed ...
 
-Check out the [documentation](https://cupsm.readthedocs.io/en/latest/) and tutorials for more.
+Check out the [documentation](https://cupsm.readthedocs.io/en/latest/) and jupyter notebooks with examples for more.
 
 
 ## Responsible for this repository:
