@@ -1,6 +1,12 @@
-Model-proxy comparison
+cupsm objects
 =================================
 
-Comparing paleoclimate simulations and proxies
+sim_data
+---------------------------------------
+
+obs_data
+---------------------------------------
+
+site_object
 ---------------------------------------
 
