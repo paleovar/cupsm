@@ -2,7 +2,7 @@ Concepts
 =================================
 
 Comparing paleoclimate simulations and proxies
-=================================
+---------------------------------------
 
 Numerical models are a fundamental tool for understanding the Earth system. To test the reliability of models, they need to be compared with observational data. This task often involves operators that map model output onto the measurement space. In paleoclimatology, so-called proxy system models (PSMs) map Earth System Model (ESM) output onto proxy measurements from natural climate archives such as ice and sediment cores. Over time, the amounts of ESM data available for analysis has increased substantially, due to higher spatial resolutions, more complex representations of processes, inclusion of more compartments of the Earth systems, longer simulation periods, and increased ensembles sizes. Uncertainties of paleoclimate proxies tend to be non-Gaussian and auto-correlated, which makes them analytically intractable. Therefore, Monte Carlo methods are convenient for rigorous uncertainty quantification. Together with more comprehensive proxy record databases, this creates a need for incorporating big data methods into the evaluation of ESMs against paleoclimate proxies. This evaluation is valuable not just to understand past climate but also to improve future Earth system projections because past climate states provide an out-of-sample test for ESMs.
 
@@ -27,7 +27,7 @@ Quantitative model-proxy comparison
 
 Applying a PSM to ESM output results in an ensemble of forward-modeled proxy time series if uncertainties in the simulations and PSM are quantified with Monte Carlo methods. Therefore, quantitative comparisons of forward-modeled proxy time series and measured proxies require computing the deviations between probability distributions. So-called strictly proper score or divergence functions are particularly well suited for this task because their mathematical properties reward honest assessments of uncertainties. Integrating these metrics is the final step of model-proxy comparison workflows.
 
-.. image:: psm_workflow
+.. image:: psm_workflow.png
    :width: 600
    :alt: Model-proxy comparison workflow
 
