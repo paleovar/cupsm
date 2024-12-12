@@ -23,8 +23,7 @@ Documentation
 
 * :doc:`concepts`
 * :doc:`objects`
-* :doc:`tutorials`
-* :doc:`Example1-Getting_started`
+* :doc:`tutorial1`
 
 
 .. toctree::
@@ -34,8 +33,7 @@ Documentation
 
    concepts
    objects
-   tutorials
-   Example1-Getting_started
+   tutorial1
    modules
 
 License
