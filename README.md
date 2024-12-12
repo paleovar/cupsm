@@ -16,7 +16,7 @@ To use the package, follow these steps
 
 2. Install the necessary packages
 
-   cupsm relies on other Python packages. To run the package, you need numpy, xarray, pandas, geopy, lipd, dask and numba. For plotting and regridding, we recommend matplotlib, cartopy, xesmf and cdo.
+   cupsm depends on other Python packages. To run the package, you need numpy, xarray, pandas, geopy, lipd, dask, and numba. For plotting and regridding, we recommend matplotlib, cartopy, xesmf, and cdo.
 
    A ready-to-use environment [file](https://github.com/paleovar/cupsm/tree/main/tutorials/condaenv_python-3.11.7.yml) for recreating a working conda environment (using python 3.11.7) is available in the [tutorials](https://github.com/paleovar/cupsm/tree/main/tutorials) directory. To recreate an environment using conda, please make sure that conda is installed. Then type:
 
