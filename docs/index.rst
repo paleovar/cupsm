@@ -24,6 +24,7 @@ Documentation
 * :doc:`concepts`
 * :doc:`objects`
 * :doc:`tutorial1`
+* :doc:`autoapi/index`
 
 
 .. toctree::
@@ -34,7 +35,6 @@ Documentation
    concepts
    objects
    tutorial1
-   modules
 
 License
 ---------------------------------------
