@@ -1,8 +1,10 @@
 """
 - space operator "field2site"
-- space operator helpers
-    - function "dx_dy_in_meter"
 """
+# Further helper functions (excluded from ReadTheDocs documentation)
+#    - function "dx_dy_in_meter"
+
+# Imports
 from .utilities import *
 import numpy as np
 import xarray as xr
@@ -24,14 +26,14 @@ def field2site(field, site_location, method="dist", radius_km=500, plot_mask=Fal
     
     Parameters:
     ----------
-    "field"         : xarray DataArray of simulation data of interest
-    "site_location" : (x,y) tuple with longitude (x) and latitude (y) of the site location
-    "method"        : Method for interpolation; available keywords "dist" (distance weighted
+    field         : xarray DataArray of simulation data of interest.
+    site_location : (x,y) tuple with longitude (x) and latitude (y) of the site location
+    method        : Method for interpolation; available keywords "dist" (distance weighted
                       mean over grid cells which are within radius) and "nn" (nearest grid cell
                       which is not nan). Default is "dist".
-    "radius_km"     : Radius in km within which grid cells centers should be considered. 
+    radius_km     : Radius in km within which grid cells centers should be considered. 
                       The default is radius_km=500.
-    "plot_mask"     : Bool, optional diagnostic plot of the weighting mask. Default is False.
+    plot_mask     : Bool, optional diagnostic plot of the weighting mask. Default is False.
     """
     if method not in ["dist", "nn"]:
         raise ValueError(f"Method {method} is not available.")
@@ -141,10 +143,11 @@ def field2site(field, site_location, method="dist", radius_km=500, plot_mask=Fal
 # ~~~~~~~~~~~~~~~~~~~~~~
 # Helper functions
 # ~~~~~~~~~~~~~~~~~~~~~~
-def dx_dy_in_meter(arr_x, arr_y):
+def _dx_dy_in_meter(arr_x, arr_y):
     """
     Returns the grid length elements dx and dy in meters for the given 
     longitudes (x) and latitudes (y).
+    Helper function for cupsm.field2site().
     
     Parameters
     ----------

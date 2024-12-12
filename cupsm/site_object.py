@@ -1,6 +1,8 @@
 """
-- lipd file to site object
+- class lipd2object
 """
+
+# Imports
 import numpy as np
 import xarray as xr
 
@@ -8,11 +10,31 @@ import xarray as xr
 # Proxy class objects
 # ~~~~~~~~~~~~~~~~~~~~~~
 
-class lipd_site:
+class lipd2object:
     """
-    Creates a python class object from a loaded lipd file.
+    Creates a class object from a loaded lipd file. For initializationn, one hands over a loaded lipd file (using the lipd package) to
+    the call. Usually, the class is called in the functions "get_records_df" and "create_proxy_info" from helper_lipd.py.
+
+    After initialization the following attributes and methods are available:
+
+    Attributes:
+    ------------
+    - age:      the age axis of the proxa data
+    - av_ds:    available data sets
+    - fname:    name of the LiPD file
+    - lipd:     the lipd file as it is read in with the python lipd package
+    - path:     the path where LiPD files are located
+    - sitename: name of the record site
+    
+    Methods:
+    ------------
+    - info:             prints a basic overview of the record
+    - load:             loads all paleo/proxy data and age model data and combines them in one xarray DataSet
+    - load_chron_data:  loads the age model data
+    - laod_paleo_data:  loads the proxy data, data can be chosen by data_set parameter. You can put "all" to load all available data. 
+                        You can chose whether you want to work on the age or depth coordinate with the coord keyword argument.
     """
-    ### Initialization
+    # Initialization
     #-----------------
     
     def __init__(self, loaded_file, path=None, filename=None):
@@ -23,29 +45,27 @@ class lipd_site:
         if filename != None:
             self.fname=filename
         # from lipd file
-        self.sitename=loaded_file['geo']['siteName']
+        self.site_name=loaded_file['geo']['siteName']
         self.coords=loaded_file['geo']['geometry']['coordinates'] #lon, lat, depth
-        self.archivetype=loaded_file['archiveType']
+        self.archive_type=loaded_file['archiveType']
         self.av_ds=list(loaded_file['paleoData']['paleo0']['measurementTable']['paleo0measurement0']['columns'].keys())
         try:
             self.age=loaded_file['paleoData']['paleo0']['measurementTable']['paleo0measurement0']['columns']['age']['values']
         except KeyError:
             self.age=["unknown", "unknown"]
             
-    ### Functions
+    # Functions
     #-----------------
     
     def info(self, meta=False):
         """
-        Prints basic information on the record 
-
-        meta: returns a dictionary of meta info on the proxy
+        Prints basic information about the record.
         """
         age=[x for x in self.age if "nan" not in str(x)]
         
         if not meta:
             print(f"""
-{self.archivetype} record {self.sitename} ({age[0]:.2f} - {age[-1]:.2f} ka)
+{self.archive_type} record {self.site_name} ({age[0]:.2f} - {age[-1]:.2f} ka)
 Position: lon={self.coords[0]}°E, lat={self.coords[1]}°N, elevation={self.coords[2]}m
 available datasets:
 {self.av_ds}
@@ -55,7 +75,7 @@ available datasets:
             # write values into new dict
             proxy_dict = {"path" : self.path,
                           "file" : self.fname,
-                          "archive" : self.archivetype,
+                          "archive" : self.archive_type,
                           "lon" : self.coords[0],
                           "lat" : self.coords[1],
                           "elevation" : self.coords[2],
@@ -104,9 +124,8 @@ available datasets:
 
     def load_chron_data(self,):
         """
-        #----
-        Returns an xarray data array for the age model data
-        #----
+        Returns an xarray DataArray for the age model data with dimensions depth*ens where ens stands for the 
+        ensemble member dimension.
         """
         if 'chronData' in self.lipd.keys():
             
@@ -139,7 +158,7 @@ available datasets:
                         temp_N = len(data)
                         if (temp_data_unit, temp_data_name, temp_N) != (data_unit, data_name, N):
                             raise AttributeError(f"""
-                            Proxy record {self.sitename}: The attributes in the age model ensemble data are not consistent.
+                            Proxy record {self.site_name}: The attributes in the age model ensemble data are not consistent.
                             Please load the data manually""")
                     ens_count+=1 # increase counter
             
@@ -157,22 +176,21 @@ available datasets:
             
             return xr_ds.drop_duplicates(dim=depth_name)   
         else:
-            raise KeyError(f"No age model data found in for proxy record from {self.sitename}.")
+            raise KeyError(f"No age model data found in for proxy record from {self.site_name}.")
             
     def load_paleo_data(self, data_set, coord="depth", quiet=False, save_in_object=False):
         """
-        #----
-        Returns an xarray data set for the given data_set keyword.
+        Returns an xarray DataArray for the given data_set keyword. The coordinate can be depth or age.
         
-        Either the coordinate depth or age are loaded.
-        
-        data_set: str, must be listed in self.av_ds.
-                  For several datasets, put a list of strings
-                  If you want all, put "all"
+        Parameters:
+        ----------
+        data_set: string; must be listed in self.av_ds.
+                  For several datasets, put a list of strings.
+                  If you want all avalable datasets, put "all".
 
-        coord:    str, either "depth" ("depth_merged") or "age" ("updated age model (median)")
-        quiet:    do not print log messages
-        #----
+        coord:    string; either "depth" ("depth_merged") or "age" ("updated age model (median)").
+        quiet:    boolean; print (False) or suppress (True) diagnostic output. Default is False.
+
         """
         # Preparation
         print_naming_warning = False
@@ -183,7 +201,7 @@ available datasets:
         elif data_set in self.av_ds:
             data_set=[data_set]
         elif not set(data_set) <= set(self.av_ds):
-            raise KeyError(f"The data set {data_set} is not available for proxy record from {self.sitename}.")
+            raise KeyError(f"The data set {data_set} is not available for proxy record from {self.site_name}.")
         
         # remove coordinate variable
         var_list=[]
@@ -235,14 +253,7 @@ available datasets:
                         local_attr[attribute] = mapping[habitat_season]
                 else:
                     local_attr[attribute] = lipd_data_dic[var][attribute]
-#            if "units" in lipd_data_dic[var].keys():
-#                local_attr["units"] = lipd_data_dic[var]['units']
-#            if "hasDataLink" in lipd_data_dic[var].keys():
-#                local_attr["data_link"] = lipd_data_dic[var]['hasDataLink']
-#            if "description" in lipd_data_dic[var].keys():
-#                local_attr["description"] = lipd_data_dic[var]['description']
-#           if "hasPubDOI" in lipd_data_dic[var].keys() and 'doi' not in locals():
-#                doi = lipd_data_dic[var]['hasPubDOI']
+                    
             # make entry in data dic
             data_dic[name]=([coord], data, local_attr)
         
@@ -251,7 +262,7 @@ available datasets:
             print(f"Variables were renamed to make them accessible via as xarray.dataset attributes, e.g. 'planktonic.d18O-1' --> 'planktonic_d18O_1' ")
         
         # global data set attributes
-        attrs_dic["description"]=f"Measured paleo data from {self.sitename}."
+        attrs_dic["description"]=f"Measured paleo data from {self.site_name}."
         attrs_dic["note"]="Variables were renamed, e.g. 'planktonic.d18O-1' --> 'planktonic_d18O_1'"
         
         # create data set
@@ -284,11 +295,14 @@ available datasets:
         Loads the paleo/proxy data and the age model data of the proxy and combines them in one single
         xarray dataset. A common depth axis is chosen.
 
-        method: how to merge the depth axes (default: left):
-            - "left": age model depth axis is used (destructive)
-            - "right": proxy data depth axis is used (destructive)
-            - "inner": intersection of depth axes is used (destructive)
-            - "outer": union of depth axes is used (non-destructive)
+        Parameters:
+        ----------
+        method:    string; how to merge the depth axes (default: left):
+                    - "left": age model depth axis is used (destructive)
+                    - "right": proxy data depth axis is used (destructive)
+                    - "inner": intersection of depth axes is used (destructive)
+                    - "outer": union of depth axes is used (non-destructive)
+        quiet:    boolean; print (False) or suppress (True) diagnostic output. Default is False.
         """
         chron_data = self.load_chron_data()
         paleo_data = self.load_paleo_data("all", quiet=quiet)
