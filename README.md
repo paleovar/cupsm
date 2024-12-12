@@ -10,7 +10,7 @@ To use the package, please follow these steps:
 
    Using the terminal, navigate to the directory and type:
 
-   `git clone git@github.com:paleovar/cupsm.git`
+   ```git clone git@github.com:paleovar/cupsm.git```
 
     Alternatively, you can download the `cupsm-main.zip` file and unpack it in your local directory.
 
@@ -18,9 +18,9 @@ To use the package, please follow these steps:
 
    cupsm is based on other python packages. You need the following packages:
 
-   A ready-to use environment [file](https://github.com/paleovar/cupsm/tree/main/tutorials/condaenv_python-3.11.7.yml) for recreating a working conda environment (using python 3.11.7) is available in the [tutorials](https://github.com/paleovar/cupsm/tree/main/tutorials) directory. To recreate an environment using conda, please make yure that conda is installed. Then type:
+   A ready-to use environment [file](https://github.com/paleovar/cupsm/tree/main/tutorials/condaenv_python-3.11.7.yml) for recreating a working conda environment (using python 3.11.7) is available in the [tutorials](https://github.com/paleovar/cupsm/tree/main/tutorials) directory. To recreate an environment using conda, please make sure that conda is installed. Then type:
 
-   `conda env create -f tutorials/condaenv_python-3.11.7.yml`
+   ```conda env create -f tutorials/condaenv_python-3.11.7.yml```
 
    The default environment name is `cupsm_env_python-3.11.7`. If you want a different name, please change it in the environment file before creating the environment.
 
@@ -37,7 +37,7 @@ To use the package, please follow these steps:
 
    Now you can import the package:
 
-   `import cupsm`
+   ```import cupsm```
 
    If you want to add the package path permanently, please change your PYTHONPATH variable.
 
