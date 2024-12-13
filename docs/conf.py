@@ -40,7 +40,7 @@ autoapi_dirs = ['../cupsm']
 #exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # Exclude all private members (prefix '_')
-autodoc_default_options = {
+autoapi_options = {
     'private-members': False,
 }
 
