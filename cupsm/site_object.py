@@ -1,4 +1,5 @@
 """
+The module contains code to create the python class object from a loaded LiPD file.
 - class lipd2object
 """
 

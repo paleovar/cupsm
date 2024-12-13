@@ -1,5 +1,5 @@
 """
-utilities
+The code of this module comprises helper routines.
 """
 # define __all__ to allow clean import via wildcard *
 __all__ = ['do_to_180']

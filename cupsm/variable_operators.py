@@ -1,4 +1,6 @@
 """
+This module contains code for variable transformations. The noise operators "white_noise" and "ar1_noise" perturb variables in sim_data or obs_data with either white or auto-correlated noise to imitate uncertainties from the proxy-climate relationship and archival processes.
+It contains:
 - white noise operator "white_noise"
 - AR1 noise operator "ar1_noise"
 """

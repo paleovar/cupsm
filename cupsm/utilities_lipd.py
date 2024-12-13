@@ -1,5 +1,7 @@
 """
-- ObsData object creator function "get_records_df" 
+This module contains helper routines to handle a database of LiPD files. 
+It contains:
+- obs_data object creator function "get_records_df" 
 - Overview table creator function "create_proxy_info"
 """
 # Further helper functions and classes (excluded from ReadTheDocs documentation)
@@ -23,8 +25,8 @@ import sys, traceback
 def get_records_df(df, file_name=None, site_name=None, location=None, loc_radius=None,
                 desired_data=None, return_as="list"):
     """
-    Based on the overview table (created by function create_proxy_info) lipd proxy records are selected, read-in
-    and returned as class objects.
+    Based on the overview table (created by the function create_proxy_info) lipd proxy record files are selected, parsed,
+    and returned as class objects "site_object". If multiple files match the selection criteria, a list or a dictionary can be returned "obs_data".
 
     Parameters:
     ----------
@@ -42,9 +44,6 @@ def get_records_df(df, file_name=None, site_name=None, location=None, loc_radius
                     -> searches all files listed in the overview table
     return_as:      string, either "list" or "dictionary". Determines whether an unsorted list of proxy record objects are returned or
                     as dictionary with record names as keys for the respective objects.
-    
-    If no arguments are given or several files fulfill the given requirements, 
-    a list of class objects is returned.
     """
 
     # --------------------

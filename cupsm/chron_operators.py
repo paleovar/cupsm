@@ -1,4 +1,6 @@
 """
+The code of this module deals with the time axes of the simulation data and the proxy data. The forward-modeling operator "time2chron" resamples the simulation data according to the target requirements and the chronology data (age ensemble) of the site object.
+It contains:
 - chron operator "time2chron" 
 - chron operator helpers
     - function "resample_sim_data"
@@ -23,9 +25,8 @@ def time2chron(sim_data, site_obj, target,
                method="point2point", sampling=None, sampling_size=None,
                quiet=False, return_resampled=False):
     """
-    Resamples the simulation data in time according to the target requirements and 
-    to the chronology data (age ensemble) of the site object, using the provided 
-    pointing method. 
+    Resamples the simulation data in time according to the target requirements and the chronology data (age ensemble) of the site object, 
+    using the provided pointing method. 
     The obtained forward-modelled proxy time series object is returned as a xarray DataArray.
 
     Note:

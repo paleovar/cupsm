@@ -1,5 +1,7 @@
 """
-- space operator "field2site"
+The code of this module deals with the spatial dimension. The forward-modeling operator "field2site" interpolates the simulation data (lon, lat, time) to a proxy site location. Two customizable interpolation methods are available. 
+It contains:
+ - space operator "field2site"
 """
 # Further helper functions (excluded from ReadTheDocs documentation)
 #    - function "dx_dy_in_meter"
@@ -13,9 +15,9 @@ from geopy.distance import great_circle
 # ~~~~~~~~~~~~~~~~~~~~~~
 # Space operator 
 # ~~~~~~~~~~~~~~~~~~~~~~
-def field2site(field, site_location, method="dist", radius_km=500, plot_mask=False):
+def field2site(sim_data, site_location, method="dist", radius_km=500, plot_mask=False):
     """
-    Interpolates the data in field to the given site location. Returns an xarray DataArray.
+    Interpolates the simulation data to the given site location. Returns an xarray DataArray.
 
     Note:
     ----
@@ -26,13 +28,13 @@ def field2site(field, site_location, method="dist", radius_km=500, plot_mask=Fal
     
     Parameters:
     ----------
-    field         : xarray DataArray of simulation data of interest.
+    sim_data      : xarray DataArray of simulation data of interest.
     site_location : (x,y) tuple with longitude (x) and latitude (y) of the site location
     method        : Method for interpolation; available keywords "dist" (distance weighted
-                      mean over grid cells which are within radius) and "nn" (nearest grid cell
-                      which is not nan). Default is "dist".
+                    mean over grid cells which are within radius) and "nn" (nearest grid cell
+                    which is not nan). Default is "dist".
     radius_km     : Radius in km within which grid cells centers should be considered. 
-                      The default is radius_km=500.
+                    The default is radius_km=500.
     plot_mask     : Bool, optional diagnostic plot of the weighting mask. Default is False.
     """
     if method not in ["dist", "nn"]:
@@ -42,7 +44,7 @@ def field2site(field, site_location, method="dist", radius_km=500, plot_mask=Fal
         raise ValueError(f"The dimensions longitude and latitude must be named 'lon' and 'lat', the coordinates of the field are {field.coords}.")
     
     x,y = site_location
-    field = do_to_180(field) # set longitude axis to -180, 180 as it standard in lipd
+    field = do_to_180(sim_data) # set longitude axis to -180, 180 as it standard in lipd
     lon = field.coords["lon"]
     lat = field.coords["lat"]
     radius_m = radius_km*1e3 # radius in meters
