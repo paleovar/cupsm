@@ -40,9 +40,11 @@ autoapi_dirs = ['../cupsm']
 #exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # Exclude all private members (prefix '_')
-autoapi_options = {
-    'private-members': False,
-}
+#autodoc_default_options = {
+#    'private-members': False,
+#}
+
+autoapi_options = [ 'members', 'undoc-members', 'show-inheritance', 'show-module-summary', 'special-members', 'imported-members']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
