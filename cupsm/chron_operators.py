@@ -7,10 +7,10 @@ It contains:
     - function "provide_chron_data"
 """
 # Further helper functions (excluded from ReadTheDocs documentation)
-#    - function "sampfunc_slice2point"
-#    - function "sampfunc_point2point"
-#    - function "create_bounds_adjacent"
-#    - function "create_bounds_distant"
+#    - function "_sampfunc_slice2point"
+#    - function "_sampfunc_point2point"
+#    - function "_create_bounds_adjacent"
+#    - function "_create_bounds_distant"
 
 # Imports
 from .utilities import *
@@ -21,12 +21,12 @@ import pandas as pd
 # ~~~~~~~~~~~~~~~~~~~~~
 # Chron operator
 # ~~~~~~~~~~~~~~~~~~~~~
-def time2chron(sim_data, site_obj, target,
+def time2chron(sim_data, site_obj,
                method="point2point", sampling=None, sampling_size=None,
                quiet=False, return_resampled=False):
     """
     Resamples the simulation data in time according to the target requirements and the chronology data (age ensemble) of the site object, 
-    using the provided pointing method. 
+    using the provided mapping method. 
     The obtained forward-modelled proxy time series object is returned as a xarray DataArray.
 
     Note:
@@ -41,12 +41,9 @@ def time2chron(sim_data, site_obj, target,
     ----------
     sim_data        : xarray DataArray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()).
     
-    site_obj        : Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see
-                        cupsm.get_records_df() documentation for more details).
+    site_obj        : Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details). A target must have been initialized before by calling the method site_obj.create_target().
                         
-    target          : Target object containing meta information for the forward proxy object.
-                        
-    method          : string; pointing method between simulation and proxy time axis. Available keywords are:
+    method          : string; mapping method between simulation and proxy time axis. Available keywords are:
                             - point2point: For resampling the simulation data, the time axes of the simulation data and the chronology data
                                              are compared point to point. The target variable from the simulation data is then selected at those
                                              time steps. Faster.
@@ -58,7 +55,7 @@ def time2chron(sim_data, site_obj, target,
                                              sizes (see below). Takes longer.
                         Default is "point2point".
                         
-    sampling        : string; sampling method, determines slice bounds and sizes. Only used if pointing method is "slice2point". Available keywords are: 
+    sampling        : string; sampling method, determines slice bounds and sizes. Only used if mapping method is "slice2point". Available keywords are: 
                             - "adjacent": This method assumes that the entire material of a proxy record (e.g., a sediment core) is used for the measurement
                                           and that resulting slices are adjacent. The depth axis of the proxy data corresponds to the midpoints of these slices. 
                                           The method determines the upper and lower bounds by halving the distance between two consecutive depth values.
@@ -73,7 +70,7 @@ def time2chron(sim_data, site_obj, target,
     quiet           : boolean; print (False) or suppress (True) diagnostic output. Default is False.
 
     return_resampled: boolean; if True, the simulation data is returned after resampling in time according to 
-                        the target object attributes as xarray Dataarray. Default is False.
+                        the target object attributes as xarray DataArray. Default is False.
     """
     ## Prior checks:
     # Checks:
@@ -85,6 +82,9 @@ def time2chron(sim_data, site_obj, target,
         if sampling == "distant" and sampling_size is None:
             print("A default sampling size of 10 millimeter is used.")
             sampling_size = 10
+    # check whether target was created
+    if not hasattr(site_object, "target"):
+        raise AttributeError("The target must be initialized in the site_object before the operators are applied.")
     
     ## Simulation data
     # name of the sim_data variable
@@ -94,11 +94,11 @@ def time2chron(sim_data, site_obj, target,
     if 'ensemble_member' in sim_data.coords and sim_data.ensemble_member.ndim!=0: 
         a=[]
         for i in sim_data.ensemble_member.values:
-            a.append(resample_sim_data(sim_data.sel(ensemble_member=i), target, site_obj.coords[1]))
+            a.append(resample_sim_data(sim_data.sel(ensemble_member=i), site_obj))
         sim_data = xr.concat(a,dim="ensemble_member")
         sim_noise=True
     else:
-        sim_data = resample_sim_data(sim_data, target, site_obj.coords[1])
+        sim_data = resample_sim_data(sim_data, site_obj)
         sim_noise=False
 
     ## Chronology data
@@ -123,11 +123,11 @@ def time2chron(sim_data, site_obj, target,
             sim_data_rand=sim_data
 
         if method == "point2point":
-            forward_proxy = sampfunc_point2point(i=i, forward_proxy=forward_proxy, ens_chron=ens_chron,
+            forward_proxy = _sampfunc_point2point(i=i, forward_proxy=forward_proxy, ens_chron=ens_chron,
                                                  ens_chron_red=ens_chron_red, sim_data_rand=sim_data_rand,quiet=quiet)
 
         elif method == "slice2point":
-            forward_proxy = sampfunc_slice2point(i=i, forward_proxy=forward_proxy, ens_chron=ens_chron,
+            forward_proxy = _sampfunc_slice2point(i=i, forward_proxy=forward_proxy, ens_chron=ens_chron,
                                                  ens_chron_d = ens_chron_d,
                                                  ens_chron_red=ens_chron_red, sim_data_rand=sim_data_rand,
                                                  sampling=sampling, sampling_size=sampling_size,quiet=quiet)
@@ -150,19 +150,22 @@ def time2chron(sim_data, site_obj, target,
 # ~~~~~~~~~~~~~~~~~~~~~~
 # Helper functions
 # ~~~~~~~~~~~~~~~~~~~~~~
-def resample_sim_data(sim_data, target, lat_coord): 
+def resample_sim_data(sim_data, site_obj):
     """
-    Resamples the given simulation data based on the attributes of the target object. Returns result as a xarray Dataarray. Helper function
+    Resamples the given simulation data based on the attributes of the target object, subclass of the site_object. Returns result as a xarray Dataarray. Helper function
     for cupsm.time2chron().
 
     Parameters:
     ----------
     sim_data        : xarray Dataarray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()).                  
-    target          : Target object containing meta information for the forward proxy object.
-    lat_coord       : float; latitude of site location in degrees North.
+    site_obj        : Site object of interest with subclass target initialized and available at site_obj.target.
     """
     # sort time axis of the simulation data (that resampling works)
     sim_data = sim_data.sortby("time")
+
+    # define target and latitude value
+    target = site_obj.target
+    lat_coord = site_obj.coords[1]
 
     # resampling
     if hasattr(target, "habitatSeason"):
@@ -251,12 +254,12 @@ def _sampfunc_slice2point(i, forward_proxy, ens_chron, ens_chron_d,
     
     ## Create bounds
     if sampling == "adjacent":
-        lower_bounds, upper_bounds = create_bounds_adjacent(ens_chron=ens_chron,
+        lower_bounds, upper_bounds = _create_bounds_adjacent(ens_chron=ens_chron,
                                                             ens_chron_red=ens_chron_red, 
                                                             sim_data_rand=sim_data_rand, 
                                                             quiet=quiet)
     elif sampling == "distant":
-        lower_bounds, upper_bounds = create_bounds_distant(ens_chron=ens_chron,
+        lower_bounds, upper_bounds = _create_bounds_distant(ens_chron=ens_chron,
                                                            ens_chron_d = ens_chron_d,
                                                            ens_chron_red=ens_chron_red, 
                                                            sim_data_rand=sim_data_rand,
@@ -318,7 +321,7 @@ def _sampfunc_point2point(i, forward_proxy, ens_chron,
 def _create_bounds_adjacent(ens_chron, ens_chron_red, sim_data_rand, quiet):
     """
     Determines the upper and lower bounds of the time slices for the simulation data over which will be averaged. Assumes adjacent slices.
-    Helper function for cupsm.sampfunc_slice2point().
+    Helper function for cupsm._sampfunc_slice2point().
     """
     # create 2 empty arrays
     lower_bounds = np.full(ens_chron_red.shape, 0) 
@@ -358,7 +361,7 @@ def _create_bounds_adjacent(ens_chron, ens_chron_red, sim_data_rand, quiet):
 def _create_bounds_distant(ens_chron, ens_chron_d, ens_chron_red, sim_data_rand, sampling_size, quiet):
     """
     Determines the upper and lower bounds of the time slices for the simulation data over which will be averaged. Assumes distant slices.
-    Helper function for cupsm.sampfunc_slice2point().
+    Helper function for cupsm._sampfunc_slice2point().
     """
     # mask nans out, but still in depth space:
     depth_red = ens_chron_d.depth[ens_chron.notnull().values]

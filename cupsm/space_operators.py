@@ -4,7 +4,7 @@ It contains:
  - space operator "field2site"
 """
 # Further helper functions (excluded from ReadTheDocs documentation)
-#    - function "dx_dy_in_meter"
+#    - function "_dx_dy_in_meter"
 
 # Imports
 from .utilities import *
@@ -15,7 +15,7 @@ from geopy.distance import great_circle
 # ~~~~~~~~~~~~~~~~~~~~~~
 # Space operator 
 # ~~~~~~~~~~~~~~~~~~~~~~
-def field2site(sim_data, site_location, method="dist", radius_km=500, plot_mask=False):
+def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False):
     """
     Interpolates the simulation data to the given site location. Returns an xarray DataArray.
 
@@ -29,7 +29,7 @@ def field2site(sim_data, site_location, method="dist", radius_km=500, plot_mask=
     Parameters:
     ----------
     sim_data      : xarray DataArray of simulation data of interest.
-    site_location : (x,y) tuple with longitude (x) and latitude (y) of the site location
+    site_obj      : Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details).
     method        : Method for interpolation; available keywords "dist" (distance weighted
                     mean over grid cells which are within radius) and "nn" (nearest grid cell
                     which is not nan). Default is "dist".
@@ -43,7 +43,7 @@ def field2site(sim_data, site_location, method="dist", radius_km=500, plot_mask=
     if not set(["lon","lat"]).issubset(set(field.dims)):
         raise ValueError(f"The dimensions longitude and latitude must be named 'lon' and 'lat', the coordinates of the field are {field.coords}.")
     
-    x,y = site_location
+    x,y,_ = site_object.coords
     field = do_to_180(sim_data) # set longitude axis to -180, 180 as it standard in lipd
     lon = field.coords["lon"]
     lat = field.coords["lat"]
@@ -59,7 +59,7 @@ def field2site(sim_data, site_location, method="dist", radius_km=500, plot_mask=
     ind_lat1 = np.fabs((lat - y)).argsort(axis=-1)[:1].values
     
     # find the grid resolution
-    dx_arr, dy = dx_dy_in_meter(lon, lat)
+    dx_arr, dy = _dx_dy_in_meter(lon, lat)
     dx = dx_arr[ind_lat1].values[0]
     
     # stepsize for identifying relevant gridcells

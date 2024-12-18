@@ -7,7 +7,7 @@ Check out the GitHub repository (https://github.com/paleovar/cupsm) and the docu
 # Imports
 from .utilities import *
 from .utilities_lipd import *
-from .site_object import lipd2object
+from .site_object import *
 from .space_operators import *
 from .chron_operators import *
 from .variable_operators import *

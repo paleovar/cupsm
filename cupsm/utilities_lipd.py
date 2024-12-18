@@ -6,8 +6,8 @@ It contains:
 """
 # Further helper functions and classes (excluded from ReadTheDocs documentation)
 # - Table creator function helper
-#    - function "empty_lipd_dict"
-#    - class "Suppressor" 
+#    - function "_empty_lipd_dict"
+#    - class "_Suppressor" 
 
 # Imports
 from .utilities import *
@@ -52,7 +52,7 @@ def get_records_df(df, file_name=None, site_name=None, location=None, loc_radius
     
     def check_read_return_single(fpath,fname):
         if os.path.isfile(fpath+fname):
-            with Suppressor():
+            with _Suppressor():
                 proxy_object = class_creator(lipd.readLipd(fpath+fname), path=fpath, file_name=fname)
             return proxy_object
         else:
@@ -63,7 +63,7 @@ def get_records_df(df, file_name=None, site_name=None, location=None, loc_radius
         record_object_list = []
         for i,file in enumerate(files):
             if os.path.isfile(paths[i]+file):
-                with Suppressor():
+                with _Suppressor():
                     temp_lipd=lipd.readLipd(paths[i]+file)
                 record_object_list.append(class_creator(temp_lipd, path=paths[i], filename=file))
             else:
@@ -247,13 +247,13 @@ def create_proxy_info(database_path, save_path=None, file_name=".proxy_meta_data
     else:
         # create the colums for the dummy array with an example file
         example_file = [f for f in os.listdir(database_path) if ".lpd" in f][0]
-        with Suppressor():
+        with _Suppressor():
             example_object = class_creator(lipd.readLipd(database_path+example_file), path=database_path,
                                            file_name=example_file)
         cols = list(example_object.info(meta=True).keys())
 
         # create the empty dataframe and list for indexing
-        empty, N = empty_lipd_dict(database_path, cols=cols, returnN=True)
+        empty, N = _empty_lipd_dict(database_path, cols=cols, returnN=True)
         index = [np.nan for i in range(N)]
         # transform into dataframe
         empty_df = pd.DataFrame(empty)
@@ -261,7 +261,7 @@ def create_proxy_info(database_path, save_path=None, file_name=".proxy_meta_data
         for ind,file in enumerate(os.listdir(database_path)): 
             if not ".lpd" in file: continue
             # create class object
-            with Suppressor():
+            with _Suppressor():
                 object = class_creator(lipd.readLipd(database_path+file), path=database_path,file_name=file)
             index[ind] = object.site_name
             proxy_dict = object.info(meta=True)

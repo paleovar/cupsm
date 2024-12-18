@@ -1,6 +1,7 @@
 """
-The module contains code to create the python class object from a loaded LiPD file.
+The module contains code to create the python class object from a loaded LiPD file and a target object for applying the operators.
 - class lipd2object
+- class target
 """
 
 # Imports
@@ -13,7 +14,7 @@ import xarray as xr
 
 class lipd2object:
     """
-    Creates a class object from a loaded lipd file. For initializationn, one hands over a loaded lipd file (using the lipd package) to
+    Creates a class object from a loaded lipd file. For initialization, one hands over a loaded lipd file (using the lipd package) to
     the call. Usually, the class is called in the functions "get_records_df" and "create_proxy_info" from helper_lipd.py.
 
     After initialization the following attributes and methods are available:
@@ -32,8 +33,7 @@ class lipd2object:
     - info:             prints a basic overview of the record
     - load:             loads all paleo/proxy data and age model data and combines them in one xarray DataSet
     - load_chron_data:  loads the age model data
-    - laod_paleo_data:  loads the proxy data, data can be chosen by data_set parameter. You can put "all" to load all available data. 
-                        You can chose whether you want to work on the age or depth coordinate with the coord keyword argument.
+    - load_paleo_data:  loads the proxy data, data can be chosen by data_set parameter. You can put "all" to load all available data. You can chose whether you want to work on the age or depth coordinate with the coord keyword argument.
     """
     # Initialization
     #-----------------
@@ -123,10 +123,14 @@ available datasets:
                     
 
 
-    def load_chron_data(self,):
+    def load_chron_data(self, save_in_object=False):
         """
         Returns an xarray DataArray for the age model data with dimensions depth*ens where ens stands for the 
         ensemble member dimension.
+
+        Parameters:
+        ----------
+        save_in_object:  boolean; if True, the loaded data is available with the .data attribute. No xarray DataArray is returned.
         """
         if 'chronData' in self.lipd.keys():
             
@@ -174,8 +178,25 @@ available datasets:
                 name=data_name                      
             )
             xr_ds['depth'].attrs = {"units": depth_unit}
+
+            # drop duplicates
+            xr_ds.drop_duplicates(dim=depth_name)
             
-            return xr_ds.drop_duplicates(dim=depth_name)   
+            if save_in_object:
+                try:
+                    self.data
+                except AttributeError:
+                    self.data = xr_ds
+                    return
+                else:
+                    if isinstance(self.data, xr.Dataset):
+                        merged = xr.merge([self.data, xr_ds], join="outer", compat='override')
+                        self.data = merged
+                        return
+                    else:
+                        raise TypeError("Instance data is of unknown type.")
+            
+            return xr_ds
         else:
             raise KeyError(f"No age model data found in for proxy record from {self.site_name}.")
             
@@ -185,13 +206,13 @@ available datasets:
         
         Parameters:
         ----------
-        data_set: string; must be listed in self.av_ds.
-                  For several datasets, put a list of strings.
-                  If you want all avalable datasets, put "all".
+        data_set:        string; must be listed in self.av_ds.
+                         For several datasets, put a list of strings.
+                         If you want all avalable datasets, put "all".
 
-        coord:    string; either "depth" ("depth_merged") or "age" ("updated age model (median)").
-        quiet:    boolean; print (False) or suppress (True) diagnostic output. Default is False.
-
+        coord:           string; either "depth" ("depth_merged") or "age" ("updated age model (median)").
+        quiet:           boolean; print (False) or suppress (True) diagnostic output. Default is False.
+        save_in_object:  boolean; if True, the loaded data is available with the .data attribute. No xarray DataArray is returned.
         """
         # Preparation
         print_naming_warning = False
@@ -281,6 +302,7 @@ available datasets:
                 self.data
             except AttributeError:
                 self.data = xr_ds
+                return
             else:
                 if isinstance(self.data, xr.Dataset):
                     merged = xr.merge([self.data, xr_ds], join="outer", compat='override')
@@ -291,21 +313,77 @@ available datasets:
                 
         return xr_ds
 
-    def load(self, method="left", quiet=False):
+    def load(self, method="left", quiet=False, save_in_object=False):
         """"
         Loads the paleo/proxy data and the age model data of the proxy and combines them in one single
         xarray dataset. A common depth axis is chosen.
 
         Parameters:
         ----------
-        method:    string; how to merge the depth axes (default: left):
-                    - "left": age model depth axis is used (destructive)
-                    - "right": proxy data depth axis is used (destructive)
-                    - "inner": intersection of depth axes is used (destructive)
-                    - "outer": union of depth axes is used (non-destructive)
-        quiet:    boolean; print (False) or suppress (True) diagnostic output. Default is False.
+        method:          string; how to merge the depth axes (default: left):
+                              - "left": age model depth axis is used (destructive)
+                              - "right": proxy data depth axis is used (destructive)
+                              - "inner": intersection of depth axes is used (destructive)
+                            - "outer": union of depth axes is used (non-destructive)
+        quiet:           boolean; print (False) or suppress (True) diagnostic output. Default is False.
+        save_in_object:  boolean; if True, the loaded data is available with the .data attribute. No xarray DataArray is returned.
         """
         chron_data = self.load_chron_data()
         paleo_data = self.load_paleo_data("all", quiet=quiet)
         data = xr.merge([chron_data, paleo_data], join=method)
+
+        if save_in_object:
+            try:
+                self.data
+            except AttributeError:
+                self.data = data
+                return
+            else:
+                if isinstance(self.data, xr.Dataset):
+                    merged = xr.merge([self.data, data], join="outer", compat='override')
+                    self.data = merged
+                    return
+                else:
+                    raise TypeError("Instance data is of unknown type.")
+        
         return data
+
+    def create_target(self, record_var=None, sim_var=None, habitatSeason="unknown"):
+        """
+        Creates a target object to contain user defined selections for the paleo data. The object is required for the application of the operators and is included in the site_obejct as site_object.target.
+    
+        Parameters:
+        ------------
+        - record_var:     string; the variable name of the paleo dataset
+        - sim_var:        string; the variable name of the simulation dataset
+        - habitatSeason:  string or list of integers; 
+                - string; valid keywords are "summer", "winter" or "annual". Refers to the local season (e.g. austral summer is summer).
+                - list of integers; indices of the month for which the paleo data are representative (for example, for boreal summer temperatures, month_i could be [7,8,9] for samples taken in July, August and September).
+        """
+        
+        # Create a target instance of SubClass as an attribute
+        self.target = lipd2object.target(record_var, sim_var, habitatSeason)
+    
+    class target():
+        """
+        Target object, subclass of site_object.
+        """      
+        def __init__(self, record_var, sim_var, habitatSeason):
+            # error for wrong keyword
+            if habitatSeason not in ["summer", "winter", "annual"]:
+                if not isinstance(habitatSeason, list) and not all(isinstance(i, int) for i in habitatSeason):
+                    raise ValueError(f"habitatSeason must be either 'summer', 'winter' or 'annual' or a list of month (integer). Please change your input '{habitatSeason}'.")
+            
+            # set variable  names
+            self.record_var = record_var
+            self.sim_var = sim_var
+            
+            # if habitat season keyword is a list of integers
+            if habitatSeason not in ["summer", "winter", "annual"] and isinstance(habitatSeason, list):
+                self.habitatSeason = None
+                self.month_i = habitatSeason
+            else:
+                self.habitatSeason = habitatSeason
+                self.month_i = None
+    
+            
