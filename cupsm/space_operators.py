@@ -37,17 +37,19 @@ def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False
                     The default is radius_km=500.
     plot_mask     : Bool, optional diagnostic plot of the weighting mask. Default is False.
     """
-    if method not in ["dist", "nn"]:
-        raise ValueError(f"Method {method} is not available.")
-
-    if not set(["lon","lat"]).issubset(set(field.dims)):
-        raise ValueError(f"The dimensions longitude and latitude must be named 'lon' and 'lat', the coordinates of the field are {field.coords}.")
-    
+    # set variables
     x,y,_ = site_object.coords
     field = do_to_180(sim_data) # set longitude axis to -180, 180 as it standard in lipd
     lon = field.coords["lon"]
     lat = field.coords["lat"]
     radius_m = radius_km*1e3 # radius in meters
+
+    # checks
+    if method not in ["dist", "nn"]:
+        raise ValueError(f"Method {method} is not available.")
+
+    if not set(["lon","lat"]).issubset(set(field.dims)):
+        raise ValueError(f"The dimensions longitude and latitude must be named 'lon' and 'lat', the coordinates of the field are {field.coords}.")
 
     # create a copy of field with nans in it (for weighting)
     mask = xr.full_like(field, fill_value=np.nan)
