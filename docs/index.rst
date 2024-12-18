@@ -12,7 +12,44 @@ Welcome to cupsm!
 Introduction
 ---------------------------------------
 
-To get started, clone the package from github with ``git clone https://github.com/paleovar/cupsm.git``. You can create an environmental with all dependencies using the ``condaenv_python-3.11.7.yml`` file. Browse through the jupyter notebooks in the tutorials directory to learn everything you need to know about the package. All modules are documented in the API reference.
+To use the package, follow these steps
+
+1. Clone the repository to a local directory of your choice:
+
+   Using the terminal, navigate to the directory and type:
+
+   ```git clone git@github.com:paleovar/cupsm.git```
+
+    Alternatively, you can download the ``cupsm-main.zip`` file and extract it to your local directory.
+
+2. Install the necessary packages
+
+   cupsm depends on other Python packages. To run the package, you need numpy, xarray, pandas, geopy, lipd, dask, and numba. For plotting and regridding, we recommend matplotlib, cartopy, xesmf, and cdo.
+
+   A ready-to-use environment `file <https://github.com/paleovar/cupsm/tree/main/tutorials/condaenv_python-3.11.7.yml>`_ for recreating a working conda environment (using python 3.11.7) is available in the `tutorials <https://github.com/paleovar/cupsm/tree/main/tutorials>`_ directory. To recreate an environment using conda, please make sure that conda is installed. Then type:
+
+   ```conda env create -f tutorials/condaenv_python-3.11.7.yml```
+
+   The default name of the environment is ``cupsm_env_python-3.11.7``. If you want a different name, please change it in the environment file before creating the environment.
+
+   Working now in python, make sure to activate the environment and install a jupyter kernel for the environment, if needed.
+
+3. Add the package path to your PYTHONPATH variable
+
+   Working now in an python environment, e.g. a jupyter notebook, you must add the package path to your PYTHONPATH variable. Change the path accordingly and run the following lines in python:
+
+   ```
+   import sys
+   sys.path.append('path/to/cupsm')
+   ```
+
+   Now you are ready to import the package:
+
+   ```import cupsm```
+
+   If you want to add the package path permanently, please change your PYTHONPATH variable.
+
+Browse through the jupyter notebooks in the tutorials directory and the documentation pages to learn everything you need to know about the package. All modules are documented in the API reference.
 
 .. image:: package_structure1.png
    :width: 600

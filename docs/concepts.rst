@@ -9,17 +9,17 @@ Numerical models are a fundamental tool for understanding the Earth system. To t
 Data cubes
 ---------------------------------------
 
-Data cubes are an increasingly popular paradigm for efficiently processing and visualizing large raster datasets in Earth system sciences. Data cubes are designed to efficiently perform operations that require only small chunks of large datasets, by parallelizing computations and loading only chunks of datasets which are needed for a specific operation, so called lazy loading. These are in particular operations that only require data along a subset of the dimensions of a dataset. This is the case in most paleoclimate applications that operate along either the temporal or the spatial dimension. Uncertainty quantification with Monte Carlo or Markov Chain Monte Carlo methods are suitable for data cube architectures because samples are (approximately) independent. This makes operations embarrassingly parallel, i.e., they can be performed without communication between samples. Exploiting embarrassingly parallel operations and lazy loading facilitates efficient memory and cpu usage.
+Data cubes are an increasingly popular paradigm for efficiently processing and visualizing large raster datasets in Earth system sciences. Data cubes are designed to efficiently perform operations that require only small chunks of large datasets, by parallelizing computations and loading only chunks of datasets which are needed for a specific operation, so called lazy loading. These are in particular operations that only require data along a subset of the dimensions of a dataset. This is the case in most paleoclimate applications that operate along either the temporal or the spatial dimension. Uncertainty quantification with Monte Carlo methods (also called ensemble methods) are suitable for data cube architectures because ensemble members are (approximately) independent. This makes operations embarrassingly parallel, i.e., they can be performed without communication between ensemble members. Exploiting embarrassingly parallel operations and lazy loading facilitates efficient memory and cpu usage.
 
 Proxy system models
 ---------------------------------------
 
-Proxy system models (PSMs) are mathematical models that map between gridded model output and point data from paleoclimate proxies by imitating processes that the measured proxy has been subjected to. This includes:
+Proxy system models (PSMs) are mathematical models that map between gridded ESM output and point data from paleoclimate proxies by imitating processes that the measured proxy has been subjected to. This includes:
 
     • Restricting climate signals to the spatial area recorded by a proxy;
     • Computing auxiliary variables recorded by the proxy which are not directly simulated by ESMs;
     • Simulating archival processes that modify the recorded climate signal such as bioturbation for marine sediment cores;
-    • Resampling to the temporally integrated and irregularly sampled time axis of a proxy record, which itself is determined by statistically inferring ages of samples from their depth in a record;
+    • Resampling to the temporally integrated and irregularly spaced time axis of a proxy record, which itself is determined by statistically inferring ages of samples from their depth in a record;
     • Applying statistical calibrations between measured quantities and climate variables.
 
 Quantitative model-proxy comparison
@@ -31,4 +31,4 @@ Applying a PSM to ESM output results in an ensemble of forward-modeled proxy tim
    :width: 600
    :alt: Model-proxy comparison workflow
 
-*The figure shows a conceptual workflow for model-proxy comparison in paleoclimatology. Starting from ESM output (top left) forward-modeled proxy time series (bottom left) are constructed by applying a chain of operators which together build a PSM. The forward-modeled proxy time series are compared with reconstructed climate time series (bottom right) which are inferred from proxies measured in natural climate archives (top right). The probability distributions formed by forward-modeled proxy time series and reconstructions are compared using strictly proper score or divergence functions. Sources of graphics: climatearchive.org, Kira Rehfeld (pers. comm.), Weitzel et al., 2024.*
+*The figure shows a conceptual workflow for model-proxy comparison in paleoclimatology. Starting from ESM output (top left) forward-modeled proxy time series (bottom left) are constructed by applying a chain of operators which together build a PSM. The forward-modeled proxy time series are compared with reconstructed climate time series (bottom right) which are inferred from proxies measured in natural climate archives (top right). The probability distributions formed by forward-modeled proxy time series and reconstructions are compared using strictly proper score or divergence functions. Sources of graphics: `climatearchive.org <climatearchive.org>`_, Kira Rehfeld (pers. comm.), Weitzel et al., 2024 (`https://doi.org/10.5194/cp-20-865-2024 <https://doi.org/10.5194/cp-20-865-2024>`_).*
