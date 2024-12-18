@@ -21,7 +21,7 @@ import pandas as pd
 # ~~~~~~~~~~~~~~~~~~~~~
 # Chron operator
 # ~~~~~~~~~~~~~~~~~~~~~
-def time2chron(sim_data, site_obj,
+def time2chron(sim_data2site, site_object,
                method="point2point", sampling=None, sampling_size=None,
                quiet=False, return_resampled=False):
     """
@@ -39,9 +39,9 @@ def time2chron(sim_data, site_obj,
 
     Parameters:
     ----------
-    sim_data        : xarray DataArray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()).
+    sim_data2site   : xarray DataArray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()).
     
-    site_obj        : Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details). A target must have been initialized before by calling the method site_obj.create_target().
+    site_object        : Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details). A target must have been initialized before by calling the method site_object.create_target().
                         
     method          : string; mapping method between simulation and proxy time axis. Available keywords are:
                             - point2point: For resampling the simulation data, the time axes of the simulation data and the chronology data
@@ -86,23 +86,23 @@ def time2chron(sim_data, site_obj,
     if not hasattr(site_object, "target"):
         raise AttributeError("The target must be initialized in the site_object before the operators are applied.")
     
-    ## Simulation data
-    # name of the sim_data variable
-    varname = sim_data.name
+    # Simulation data
+    sim_data = sim_data2site
+    varname = sim_data.name # name of the sim_data variable
     
     # resample simulation data given the target's requirements
     if 'ensemble_member' in sim_data.coords and sim_data.ensemble_member.ndim!=0: 
         a=[]
         for i in sim_data.ensemble_member.values:
-            a.append(resample_sim_data(sim_data.sel(ensemble_member=i), site_obj))
+            a.append(resample_sim_data(sim_data.sel(ensemble_member=i), site_object))
         sim_data = xr.concat(a,dim="ensemble_member")
         sim_noise=True
     else:
-        sim_data = resample_sim_data(sim_data, site_obj)
+        sim_data = resample_sim_data(sim_data, site_object)
         sim_noise=False
 
     ## Chronology data
-    chron_data = provide_chron_data(site_obj=site_obj, sim_data=sim_data, quiet=quiet)
+    chron_data = provide_chron_data(site_object=site_object, sim_data=sim_data, quiet=quiet)
     
     ## Time mapping
     # prepare iteration through ensemble axis
@@ -135,9 +135,9 @@ def time2chron(sim_data, site_obj,
     # create xr.DataArray for forward proxy object
     forward_proxy = xr.DataArray(data=forward_proxy, dims=chron_data.dims, 
                                  coords=chron_data.coords, name=varname)
-    forward_proxy.attrs = {"site": site_obj.sitename,
-                           "lon": site_obj.coords[0],
-                           "lat": site_obj.coords[1],
+    forward_proxy.attrs = {"site": site_object.site_name,
+                           "lon": site_object.coords[0],
+                           "lat": site_object.coords[1],
                               }
     if hasattr(sim_data, "units"):
         forward_proxy.attrs["units"] = sim_data.attrs["units"]
@@ -150,7 +150,7 @@ def time2chron(sim_data, site_obj,
 # ~~~~~~~~~~~~~~~~~~~~~~
 # Helper functions
 # ~~~~~~~~~~~~~~~~~~~~~~
-def resample_sim_data(sim_data, site_obj):
+def resample_sim_data(sim_data, site_object):
     """
     Resamples the given simulation data based on the attributes of the target object, subclass of the site_object. Returns result as a xarray Dataarray. Helper function
     for cupsm.time2chron().
@@ -158,14 +158,14 @@ def resample_sim_data(sim_data, site_obj):
     Parameters:
     ----------
     sim_data        : xarray Dataarray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()).                  
-    site_obj        : Site object of interest with subclass target initialized and available at site_obj.target.
+    site_object        : Site object of interest with subclass target initialized and available at site_object.target.
     """
     # sort time axis of the simulation data (that resampling works)
     sim_data = sim_data.sortby("time")
 
     # define target and latitude value
-    target = site_obj.target
-    lat_coord = site_obj.coords[1]
+    target = site_object.target
+    lat_coord = site_object.coords[1]
 
     # resampling
     if hasattr(target, "habitatSeason"):
@@ -175,9 +175,9 @@ def resample_sim_data(sim_data, site_obj):
                 season_mapping = {"winter" : "JJA", "summer" : "DJF"}   
             else:
                 season_mapping = {"summer" : "JJA", "winter" : "DJF"}
-            season = season_mapping[target.habitatSeason]
             # chose target month
             if target.month_i is None:
+                season = season_mapping[target.habitatSeason]
                 month_i = {"JJA" : [6, 7, 8], "DJF" : [12, 1, 2] }[season]
             else:
                 month_i = target.month_i 
@@ -186,42 +186,36 @@ def resample_sim_data(sim_data, site_obj):
             seasonal_data = sim_data.where(sim_data['time.month'].isin(month_i), drop=True)
             resampled = seasonal_data.resample(time="1Y").mean("time")
             # convert time axis to years as integers
-            resampled = resampled.groupby("time.year").mean("time")
-            
+            resampled = resampled.groupby("time.year").mean("time")    
+        
         else:
             resampled = sim_data.resample(time="1Y").mean("time")
             resampled = resampled.groupby("time.year").mean("time")
     else:
-        pass
+        raise AttributeError("The target habitat season is not defined. Check the source code in site_object.py.")
     return resampled
 
-def provide_chron_data (site_obj, sim_data, quiet):
+def provide_chron_data (site_object, sim_data, quiet):
     """
     Converts site object chronology data from kiloyears to years, rounds it to annual scale and cuts it accordingly to the age limits of the provided simulation data. 
     The result is returned as a xarray Datarray. Helper function for cupsm.time2chron().
     
     Parameters:
     ----------
-    site_obj        : Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see
+    site_object        : Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see
                         cupsm.get_records_df() documentation for more details).
     sim_data        : xarray Dataarray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()) and resampled
                         in time according to the target object attributes (as done by the helper function cupsm.resample_sim_data(), see documentation of 
                         cupsm.resample_sim_data for more details).
-    quiet           : boolean; if True plot chronology data after reduction to relevant ages.
     """
     # load chron data
-    chron_data = site_obj.load_chron_data()
+    chron_data = site_object.load_chron_data()
     # convert age data to ka (comparison beyond annual scale not reasonable)
     chron_data = (chron_data * 1000).round().astype(int) 
     # cut the chron data to simulation years min and max
     simy_min = sim_data.year.min().values
     simy_max = sim_data.year.max().values
     chron_data = chron_data.where((chron_data <= simy_max) & (chron_data >= simy_min), drop=True)
-
-    if not quiet:
-        print("Chron data after reduction to relevant ages:")
-        chron_data.plot()
-        plt.show()
     return chron_data
 
 def _sampfunc_slice2point(i, forward_proxy, ens_chron, ens_chron_d,
@@ -305,7 +299,7 @@ def _sampfunc_point2point(i, forward_proxy, ens_chron,
     except ValueError:
         # this happens due to year duplicates in the age model
         if not quiet:
-            print(f"Site {site_obj.sitename}: For chron ensemble member {i+1}, the age column contains duplicates.")
+            print(f"For chron ensemble member {i+1}, the age column contains duplicates.")
         ens_chron_unique=ens_chron_red.drop_duplicates(dim="year",keep=False) # drop all duplicates
         duplicates=set(list(ens_chron_red.year.values)).difference(list(ens_chron_unique.year.values)) # years for which we have duplicates
         if not quiet:

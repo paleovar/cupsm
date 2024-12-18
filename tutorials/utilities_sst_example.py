@@ -85,3 +85,11 @@ def transfer_timeaxis_deglac(data, return_np_years=False):
         return data
     else:
         return data, np.array(years_list)
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Time axis transformation
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def plot_results():
+    XXX

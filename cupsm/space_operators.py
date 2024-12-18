@@ -38,7 +38,7 @@ def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False
     plot_mask     : Bool, optional diagnostic plot of the weighting mask. Default is False.
     """
     # set variables
-    x,y,_ = site_object.coords
+    x,y,_ = site_obj.coords
     field = do_to_180(sim_data) # set longitude axis to -180, 180 as it standard in lipd
     lon = field.coords["lon"]
     lat = field.coords["lat"]
@@ -116,9 +116,12 @@ def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False
 
     mask = (mask/w_distance_sum) # normalize to 1
 
-    if plot_mask:
+    if plot_mask and method == "dist":
         # plot a diagnostic plot of the weighting mask
         mask.rename("weighting [0-1]").plot()
+    elif plot_mask and method == "nn":
+        # set max to one and rest to nan
+        xr.where((mask==mask.max())==1, 1, np.nan).rename("weighting [0-1]").plot()
 
     if method == "dist":
         selected_mask = mask.sel(lon=slice(lon_min, lon_max), lat=slice(lat_min, lat_max))
@@ -126,12 +129,13 @@ def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False
         field_at_loc = xr.DataArray(data=(selected_field * selected_mask).weighted(w).sum(('lon', 'lat')),
                                   attrs=field.attrs)
     elif method == "nn":
-        # chose from weighted mask
+        # chose maximum from weighting mask                           
         mask_argmax = mask.argmax(["lon", "lat"])
         nn_lon_ind = int(mask_argmax["lon"])
         nn_lat_ind = int(mask_argmax["lat"])
         field_at_loc = xr.DataArray(data=(field.isel(lon=nn_lon_ind, lat=nn_lat_ind)),
                                   attrs=field.attrs)
+        
         
     try:
         field_at_loc.attrs = {"lon": x,
