@@ -7,7 +7,7 @@ Welcome to cupsm!
 =================================
 **Proxy system modeling with data cubes**
 
-``cupsm`` is an open-source python package for proxy system modeling that makes use of ``xarray`` and ``dask`` for efficient data handling and parallelization.
+``cupsm`` is an open-source python package for proxy system modeling that makes use of `xarray <https://docs.xarray.dev/en/stable/>`_ and `dask <https://www.dask.org/>`_ for efficient data handling and parallelization.
 
 Introduction
 ---------------------------------------
