@@ -38,15 +38,14 @@ To use the package, follow these steps
 
    Working now in an python environment, e.g. a jupyter notebook, you must add the package path to your PYTHONPATH variable. Change the path accordingly and run the following lines in python:
 
-   ``
-   import sys
-   
-   sys.path.append('path/to/cupsm')
-   ``
+   .. code:: 
+       import sys
+       sys.path.append('path/to/cupsm')
 
    Now you are ready to import the package:
 
-   ``import cupsm``
+   .. code:: 
+       import cupsm
 
    If you want to add the package path permanently, please change your PYTHONPATH variable.
 
