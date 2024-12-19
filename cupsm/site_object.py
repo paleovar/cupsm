@@ -43,8 +43,8 @@ class lipd2object:
         self.lipd=loaded_file
         if path != None:
             self.path=path
-        if filename != None:
-            self.fname=filename
+        if file_name != None:
+            self.fname=file_name
         # from lipd file
         self.site_name=loaded_file['geo']['siteName']
         self.coords=loaded_file['geo']['geometry']['coordinates'] #lon, lat, depth
