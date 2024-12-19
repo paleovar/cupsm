@@ -65,7 +65,7 @@ def get_records_df(df, file_name=None, site_name=None, location=None, loc_radius
             if os.path.isfile(paths[i]+file):
                 with _Suppressor():
                     temp_lipd=lipd.readLipd(paths[i]+file)
-                record_object_list.append(class_creator(temp_lipd, path=paths[i], filename=file))
+                record_object_list.append(class_creator(temp_lipd, path=paths[i], file_name=file))
             else:
                 raise FileNotFoundError(f"The provided file {fname} is not found at {fpath}. Is your proxy info table up-to-date?")
         print(f"I return a {return_as} with {len(record_object_list)} record objects at {location} +/- {loc_radius}.")
