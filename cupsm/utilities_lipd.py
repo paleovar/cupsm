@@ -288,7 +288,7 @@ def _empty_lipd_dict(database_path, cols=None, returnN=False):
     returnN:         boolean; default is False, if True, the number of LiPD files found is returned as well
     """
     # number of lipd files in path
-    N = len([file for file in os.listdir(path) if os.path.isfile(os.path.join(path, file)) and ".lpd" in file])
+    N = len([file for file in os.listdir(database_path) if os.path.isfile(os.path.join(database_path, file)) and ".lpd" in file])
     # array full of nan
     a = [np.nan for i in range(N)]
     # empty dictionary
