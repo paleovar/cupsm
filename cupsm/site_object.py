@@ -38,7 +38,7 @@ class lipd2object:
     # Initialization
     #-----------------
     
-    def __init__(self, loaded_file, path=None, filename=None):
+    def __init__(self, loaded_file, path=None, file_name=None):
         # basic
         self.lipd=loaded_file
         if path != None:
