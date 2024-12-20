@@ -21,15 +21,19 @@ class lipd2object:
 
     Attributes:
     ------------
-    - age:      the age axis of the proxa data
-    - av_ds:    available data sets
-    - fname:    name of the LiPD file
-    - lipd:     the lipd file as it is read in with the python lipd package
-    - path:     the path where LiPD files are located
-    - sitename: name of the record site
+    - age:          the age axis of the proxa data
+    - archive_type: archive type, e.g. marine sediment
+    - av_ds:        available data sets
+    - coords:       proxy location in lon, lat, depth
+    - fname:        name of the LiPD file
+    - lipd:         the lipd file as it is read in with the python lipd package
+    - path:         the path where LiPD files are located
+    - sitename:     name of the record site
+    - target:       target object for proxy forward modeling (only available after running the method "create_target")
     
     Methods:
     ------------
+    - create_target:    creates a target subclass for proxy forward modeling, saved in lipd2object.target attribute
     - info:             prints a basic overview of the record
     - load:             loads all paleo/proxy data and age model data and combines them in one xarray DataSet
     - load_chron_data:  loads the age model data
@@ -370,7 +374,7 @@ available datasets:
         """      
         def __init__(self, record_var, sim_var, habitatSeason):
             # error for wrong keyword
-            if habitatSeason not in ["summer", "winter", "annual"]:
+            if habitatSeason not in ["summer", "winter", "annual", "unknown"]:
                 if not isinstance(habitatSeason, list) and not all(isinstance(i, int) for i in habitatSeason):
                     raise ValueError(f"habitatSeason must be either 'summer', 'winter' or 'annual' or a list of month (integer). Please change your input '{habitatSeason}'.")
             
@@ -379,7 +383,7 @@ available datasets:
             self.sim_var = sim_var
             
             # if habitat season keyword is a list of integers
-            if habitatSeason not in ["summer", "winter", "annual"] and isinstance(habitatSeason, list):
+            if habitatSeason not in ["summer", "winter", "annual", "unknown"] and isinstance(habitatSeason, list):
                 self.habitatSeason = None
                 self.month_i = habitatSeason
             else:

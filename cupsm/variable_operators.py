@@ -1,5 +1,5 @@
 """
-This module contains code for variable transformations. The noise operators "white_noise" and "ar1_noise" perturb variables in sim_data or obs_data with either white or auto-correlated noise to imitate uncertainties from the proxy-climate relationship and archival processes.
+This module contains code for variable transformations. The noise operators "white_noise" and "ar1_noise" perturb variables in sim_data with either white or auto-correlated noise to imitate uncertainties from the proxy-climate relationship and archival processes.
 It contains:
 - white noise operator "white_noise"
 - AR1 noise operator "ar1_noise"
@@ -15,8 +15,8 @@ import pandas as pd
 
 def white_noise(sim_data,num_ensemble,mu=0,sigma=1):    
     """
-    Creates white noise by randomly drawing values from a normal (Gaussian)
-    distribution for each location and point in time of the input data. 
+    Creates white noise by filling an array in shape of the input data
+    with randomly drawn values from a normal (Gaussian) distribution. 
     Adds this white noise to the input data and saves the result as a new
     (white noise) ensemble member. 
     
@@ -27,10 +27,10 @@ def white_noise(sim_data,num_ensemble,mu=0,sigma=1):
     
     Parameters:
     ----------
-    sim_data       : xarray Datarray; (simulation) input data
-    num_ensemble   : integer; number of additional white noise ensemble members to be created.
-    mu             : float; mean of the normal distribution. Default is mu=0.
-    sigma          : float; standard deviation of the normal distribution. Default is sigma=1.
+    sim_data      : xarray Datarray; input data (e.g. simulation data)
+    num_ensemble  : integer; number of additional white noise ensemble members to be created.
+    mu            : float; mean of the normal distribution. Default is mu=0.
+    sigma         : float; standard deviation of the normal distribution. Default is sigma=1.
 
     """
     # Check if dimension "ensemble_member" already exists in sim data
@@ -48,12 +48,14 @@ def white_noise(sim_data,num_ensemble,mu=0,sigma=1):
 #~~~~~~~~~~~~~~~~~~~~~~~~
 def ar1_noise (sim_data,num_ensemble,rho,sigma,quiet=False):
     """
-    Creates first order auto-regressive (AR1) noise for each
-    location of the input data following Y(t)=rho*Y(t-1)+e(t)
-    with time-step t, magnitude rho and error term e(t).
-    e(t) is drawn randomly from a normal distribution with
-    mean=0 and  standard deviation=sigma*sqrt(1-rho^2). 
-    Y(0) is drawn randomly from an uniform distribution over
+    Creates first order auto-regressive (AR1) noise 
+    following Y(t)=rho*Y(t-1)+e(t) with time step t,
+    magnitude rho and error term e(t).
+    e(t) is created by filling an array in shape of the
+    input data with randomly drawn values from a normal
+    distribution with mean=0 and standard deviation=sigma*sqrt(1-rho^2). 
+    Y(0) is created by filling an array in shape of the input for t=0
+    with randomly drawn values from an uniform distribution over
     [0,1). The number of time-steps is given by the length of
     the input data time axis. 
     
@@ -66,11 +68,11 @@ def ar1_noise (sim_data,num_ensemble,rho,sigma,quiet=False):
 
     Parameters:
     ----------
-    sim_data      : xarray Datarray; (simulation) input data
-    num_ensemble  : integer; number of additional AR1 noise ensemble members to be created.
-    rho           : float; noise magnitude
-    sigma         : float; standard deviation of Y(t)
-    quiet         : boolean; if True surpresses warning for non-stationary process. Default is False.
+    sim_data     : xarray Datarray; input data (e.g. simulation data)
+    num_ensemble : integer; number of additional AR1 noise ensemble members to be created.
+    rho          : float; noise magnitude
+    sigma        : float; standard deviation of Y(t)
+    quiet        : boolean; if True surpresses warning for non-stationary process. Default is False.
 
     """
     
@@ -92,11 +94,11 @@ def ar1_noise (sim_data,num_ensemble,rho,sigma,quiet=False):
     # Generate AR1 noise
     s = sigma * np.sqrt(1 - rho**2)
     for i in range(0,num_ensemble):
-        v = np.random.normal(0, s, size=sim_data.shape)
-        v[0] = np.random.rand()
+        e = sim_data.copy(data=np.random.normal(0, s, size=sim_data.shape))
+        e[dict(time=0)] = np.random.rand(*e[dict(time=0)].shape)
         for t in range(1, n):
-            v[t] += rho * v[t - 1]
+            e[dict(time=t)] += rho * e[dict(time= t - 1)]
         # add generated AR1 noise to sim_data
-        sim_data_ar1[i+1]=sim_data_ar1[i+1]+v
+        sim_data_ar1[i+1]=sim_data_ar1[i+1]+e
 
     return sim_data_ar1
