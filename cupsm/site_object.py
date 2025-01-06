@@ -73,10 +73,10 @@ class lipd2object:
         
         try:
             self.age=loaded_file['paleoData']['paleo0']['measurementTable']['paleo0measurement0']['columns']['age']['values']
-        """ The age axis of the proxa data """
             
         except KeyError:
             self.age=["unknown", "unknown"]
+            """ The age axis of the proxa data """
             
     # Functions
     #-----------------
