@@ -53,19 +53,19 @@ def ar1_noise (sim_data,num_ensemble,rho,sigma,quiet=False):
     distribution with `mean=0` and `standard deviation=sigma*sqrt(1-rho^2)`. 
     `Y(0)` is created by filling an array in shape of the input for `t=0`
     with randomly drawn values from an uniform distribution over
-    `[0,1)`. The number of time-steps is given by the length of
+    `[0,1)`. The number of time steps is given by the length of
     the input data time axis. 
     
-    Adds this AR1 noise to the input data and saves the result
+    The AR1 noise is added to the input data and the result is saved
     as a new (AR1 noise) ensemble member. Multiple new ensemble 
     members can be created. The original input data is kept as 
     the first ensemble member. 
     
-    The result is returned as a xarray Dataarray.
+    The result is returned as a xarray DataArray.
 
     Parameters:
     ------------------------------
-    :sim_data:      xarray Datarray; input data (e.g. simulation data)
+    :sim_data:      xarray DataArray; input data (e.g. simulation data)
     :num_ensemble:  integer; number of additional AR1 noise ensemble members to be created.
     :rho:           float; noise magnitude
     :sigma:         float; standard deviation of Y(t)

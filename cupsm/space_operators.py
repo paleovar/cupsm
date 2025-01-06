@@ -23,7 +23,7 @@ def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False
 
     Notes:
     ------------------------------
-    --> Usually lipd files report the coordinate longitude between -180°E and +180°E, so the longitude coordinate of the field may be transformed accordingly.
+    --> Usually LiPD files report the coordinate longitude between -180°E and +180°E, so the longitude coordinate of the field may be transformed accordingly.
     
     --> To avoid artefacts, grid cells that are nan (empty/undefined) at any point on the time axis are ignored for the entire calculation. 
     
@@ -31,12 +31,12 @@ def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False
     ------------------------------
     :sim_data:	xarray DataArray of simulation data of interest.
     :site_obj:	Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details).
-    :method:	Method for interpolation; available keywords "dist" (distance weighted
+    :method:	string; Method for interpolation; available keywords: "dist" (distance weighted
                 mean over grid cells which are within radius) and "nn" (nearest grid cell
                 which is not nan). Default is "dist".
-    :radius_km:	Radius in km within which grid cells centers should be considered. 
+    :radius_km:	Radius in km within which grid cell centers should be considered. 
                 The default is radius_km=500.
-    :plot_mask:	Bool, optional diagnostic plot of the weighting mask. Default is False.
+    :plot_mask:	boolean; optional diagnostic plot of the weighting mask. Default is False.
     """
     # set variables
     x,y,_ = site_obj.coords

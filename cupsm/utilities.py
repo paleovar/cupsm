@@ -10,7 +10,7 @@ __all__ = ['do_to_180']
 # ~~~~~~~~~~~~~~~~~~~~~~
 def do_to_180(dataobject, lon_name = 'lon', quiet=True):
     """
-    Transforms the longitude coordinate from 0->360 to -180->+180 in place.
+    Transforms the longitude coordinate from 0->360 to -180->+180.
     
     Parameters:
     ------------------------------

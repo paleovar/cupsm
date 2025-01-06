@@ -27,13 +27,13 @@ import sys, traceback
 def get_records_df(df, file_name=None, site_name=None, location=None, loc_radius=None,
                 desired_data=None, return_as="list"):
     """
-    Based on the overview table (created by the function create_proxy_info) lipd proxy record files are selected, parsed, and returned as class objects "site_object". 
-    If multiple files match the selection criteria, a list or a dictionary can be returned "obs_data".
+    Based on the overview table (created by the function create_proxy_info) LiPD proxy record files are selected, parsed, and returned as class objects "site_object". 
+    If multiple files match the selection criteria, a list or a dictionary can be returned as "obs_data".
 
     Parameters:
     ------------------------------
     :df:            pandas DataFrame; the proxy overview table created by the function create_proxy_info
-    :file_name:     string or list of strings; name(s) of the lipd file without directory path (e.g. "XXXX.lipd")
+    :file_name:     string or list of strings; name(s) of the LiPD file without directory path (e.g. "XXXX.lipd")
     :site_name:     string or list of strings; name(s) of the proxy record site (e.g. "MD88_770")
                     -> detects only first hit
     :location:      A list or tuple for the desired proxy record location, given in degrees East and North and meters ignoring 
@@ -42,10 +42,10 @@ def get_records_df(df, file_name=None, site_name=None, location=None, loc_radius
                     -> searches all files listed in the overview table
     :loc_radius:    A list or tuple which determines a location interval --> location +/- loc_radius, given in the format [lon, lat, m]
                     in degrees East and North and meters
-    :desired_data:  Desired variable as str, must match definition in lipd file, e.g. 'surface.temp'
-                    -> searches all files listed in the overview table
-    :return_as:     string, either "list" or "dictionary". Determines whether an unsorted list of proxy record objects are returned or
-                    as dictionary with record names as keys for the respective objects.
+    :desired_data:  Desired variable as string, must match definition in LiPD file, e.g. 'surface.temp'.
+                    Searches all files listed in the overview table
+    :return_as:     string; either "list" or "dictionary". Determines whether an unsorted list of proxy record objects are returned or
+                    a dictionary with record names as keys for the respective objects.
     """
 
     # --------------------

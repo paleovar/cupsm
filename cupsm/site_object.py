@@ -2,7 +2,7 @@
 The module contains code to create the python class object from a loaded LiPD file and a target object for applying the operators.
 
 - class lipd2object
-- class target
+- subclass target
 """
 
 # Imports
@@ -15,8 +15,8 @@ import xarray as xr
 
 class lipd2object:
     """
-    Creates a class object from a loaded lipd file. 
-    For initialization, one hands over a loaded lipd file (using the lipd package) to the call. Usually, the class is called in the functions 
+    Creates a class object from a loaded LiPD file. 
+    For initialization, one hands over a loaded LiPD file (using the lipd package) to the call. Usually, the class is called in the functions 
     "get_records_df" and "create_proxy_info" from helper_lipd.py.
 
     After initialization the following attributes and methods are available:
@@ -28,7 +28,7 @@ class lipd2object:
     - av_ds:        available data sets
     - coords:       proxy location in lon, lat, depth
     - fname:        name of the LiPD file
-    - lipd:         the lipd file as it is read in with the python lipd package
+    - lipd:         the LiPD file as it is read in with the python lipd package
     - path:         the path where LiPD files are located
     - sitename:     name of the record site
     - target:       target object for proxy forward modeling (only available after running the method "create_target")
@@ -37,7 +37,7 @@ class lipd2object:
     ------------------------------------
     - create_target:    creates a target subclass for proxy forward modeling, saved in lipd2object.target attribute
     - info:             prints a basic overview of the record
-    - load:             loads all paleo/proxy data and age model data and combines them in one xarray DataSet
+    - load:             loads all proxy data and age model data and combines them in one xarray DataSet
     - load_chron_data:  loads the age model data
     - load_paleo_data:  loads the proxy data, data can be chosen by data_set parameter. You can put "all" to load all available data. You can chose whether you want to work on the age or depth coordinate with the coord keyword argument.
     
@@ -148,7 +148,7 @@ available datasets:
 
     def load_chron_data(self, save_in_object=False):
         """
-        Loads the age model data. Returns an xarray DataArray for the age model data with dimensions depth*ens where ens stands for the 
+        Loads the age model data. Returns an xarray DataArray for the age model data with dimensions depth and ens where ens stands for the 
         ensemble member dimension.
 
         Parameters:
@@ -225,7 +225,7 @@ available datasets:
             
     def load_paleo_data(self, data_set, coord="depth", quiet=False, save_in_object=False):
         """
-        Loads the proxy data, data can be chosen by data_set parameter. You can put "all" to load all available data. You can chose whether you want to work on the age or depth coordinate with the coord keyword argument. Returns an xarray DataArray for the given data_set keyword. The coordinate can be depth or age.
+        Loads the proxy data. Data to be loaded can be chosen by data_set parameter. You can put "all" to load all available data. You can chose whether you want to work on the age or depth coordinate with the coord keyword argument. Returns an xarray DataArray for the given data_set keyword. The coordinate can be depth or age.
         
         Parameters:
         ---------------------------------
@@ -337,9 +337,9 @@ available datasets:
         return xr_ds
 
     def load(self, method="left", quiet=False, save_in_object=False):
-        """"
-        Loads the paleo/proxy data and the age model data of the proxy and combines them in one single
-        xarray dataset. A common depth axis is chosen.
+        """
+        Loads the proxy data and the age model data of the proxy and combines them in one single
+        xarray DataSet. A common depth axis is chosen.
 
         Parameters:
         ---------------------------------
@@ -375,7 +375,7 @@ available datasets:
 
     def create_target(self, record_var=None, sim_var=None, habitatSeason="unknown"):
         """
-        Creates a target object to contain user defined selections for the paleo data. The object is required for the application of the operators and is included in the site_obejct as site_object.target.
+        Creates a target object to contain user defined selections for the paleo data. The object is required for the application of the operators and is included in the site_object as site_object.target.
     
         Parameters:
         ---------------------------------
@@ -384,7 +384,7 @@ available datasets:
         :habitatSeason:  string or list of integers; 
         
                 - string; valid keywords are "summer", "winter" or "annual". Refers to the local season (e.g. austral summer is summer).
-                - list of integers; indices of the month for which the paleo data are representative (for example, for boreal summer temperatures, month_i could be [7,8,9] for samples taken in July, August and September).
+                - list of integers; indices of the month for which the paleo data are representative (for example, for boreal summer temperatures, month_i could be [7,8,9] for samples recording the average over July, August and September).
                 
         """
         
