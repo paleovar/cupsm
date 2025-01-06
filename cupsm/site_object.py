@@ -60,16 +60,16 @@ class lipd2object:
             
         # from lipd file
         self.site_name=loaded_file['geo']['siteName']
-        """ Name of the record site """"
+        """ Name of the record site """
         
         self.coords=loaded_file['geo']['geometry']['coordinates'] #lon, lat, depth
-        """ Proxy location in lon, lat, depth """"
+        """ Proxy location in lon, lat, depth """
         
         self.archive_type=loaded_file['archiveType']
-        """ Archive type, e.g. marine sediment """"
+        """ Archive type, e.g. marine sediment """
         
         self.av_ds=list(loaded_file['paleoData']['paleo0']['measurementTable']['paleo0measurement0']['columns'].keys())
-        """ Available data sets """"
+        """ Available data sets """
         
         try:
             self.age=loaded_file['paleoData']['paleo0']['measurementTable']['paleo0measurement0']['columns']['age']['values']
