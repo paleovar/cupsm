@@ -24,10 +24,10 @@ def white_noise(sim_data,num_ensemble,mu=0,sigma=1):
     
     Parameters:
     ------------------------------
-    :sim_data      : xarray Datarray; input data (e.g. simulation data)
-    :num_ensemble  : integer; number of additional white noise ensemble members to be created.
-    :mu            : float; mean of the normal distribution. Default is mu=0.
-    :sigma         : float; standard deviation of the normal distribution. Default is sigma=1.
+    :sim_data:       xarray Datarray; input data (e.g. simulation data)
+    :num_ensemble:   integer; number of additional white noise ensemble members to be created.
+    :mu:             float; mean of the normal distribution. Default is mu=0.
+    :sigma:          float; standard deviation of the normal distribution. Default is sigma=1.
 
     """
     # Check if dimension "ensemble_member" already exists in sim data
@@ -46,12 +46,12 @@ def white_noise(sim_data,num_ensemble,mu=0,sigma=1):
 def ar1_noise (sim_data,num_ensemble,rho,sigma,quiet=False):
     """
     Creates first order auto-regressive (AR1) noise 
-    following `Y(t)=rho*Y(t-1)+e(t)` with time step t,
-    magnitude rho and error term e(t).
-    e(t) is created by filling an array in shape of the
+    following `Y(t)=rho*Y(t-1)+e(t)` with time step `t`,
+    magnitude `rho` and error term `e(t)`.
+    `e(t)` is created by filling an array in shape of the
     input data with randomly drawn values from a normal
     distribution with `mean=0` and `standard deviation=sigma*sqrt(1-rho^2)`. 
-    Y(0) is created by filling an array in shape of the input for `t=0
+    `Y(0)` is created by filling an array in shape of the input for `t=0`
     with randomly drawn values from an uniform distribution over
     `[0,1)`. The number of time-steps is given by the length of
     the input data time axis. 
@@ -65,11 +65,11 @@ def ar1_noise (sim_data,num_ensemble,rho,sigma,quiet=False):
 
     Parameters:
     ------------------------------
-    :sim_data     : xarray Datarray; input data (e.g. simulation data)
-    :num_ensemble : integer; number of additional AR1 noise ensemble members to be created.
-    :rho          : float; noise magnitude
-    :sigma        : float; standard deviation of Y(t)
-    :quiet        : boolean; if True surpresses warning for non-stationary process. Default is False.
+    :sim_data:      xarray Datarray; input data (e.g. simulation data)
+    :num_ensemble:  integer; number of additional AR1 noise ensemble members to be created.
+    :rho:           float; noise magnitude
+    :sigma:         float; standard deviation of Y(t)
+    :quiet:         boolean; if True surpresses warning for non-stationary process. Default is False.
 
     """
     
