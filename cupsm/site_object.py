@@ -40,6 +40,7 @@ class lipd2object:
     - load:             loads all paleo/proxy data and age model data and combines them in one xarray DataSet
     - load_chron_data:  loads the age model data
     - load_paleo_data:  loads the proxy data, data can be chosen by data_set parameter. You can put "all" to load all available data. You can chose whether you want to work on the age or depth coordinate with the coord keyword argument.
+    
     """
     # Initialization
     #-----------------
@@ -47,17 +48,25 @@ class lipd2object:
     def __init__(self, loaded_file, path=None, file_name=None):
         # basic
         self.lipd=loaded_file
+        """ The lipd file as it is read in with the python lipd package """
         if path != None:
             self.path=path
+            """ The path where LiPD files are located """
         if file_name != None:
             self.fname=file_name
+            """ Name of the LiPD file """
         # from lipd file
         self.site_name=loaded_file['geo']['siteName']
+        """ Name of the record site """"
         self.coords=loaded_file['geo']['geometry']['coordinates'] #lon, lat, depth
+        """ Proxy location in lon, lat, depth """"
         self.archive_type=loaded_file['archiveType']
+        """ Archive type, e.g. marine sediment """"
         self.av_ds=list(loaded_file['paleoData']['paleo0']['measurementTable']['paleo0measurement0']['columns'].keys())
+        """ Available data sets """"
         try:
             self.age=loaded_file['paleoData']['paleo0']['measurementTable']['paleo0measurement0']['columns']['age']['values']
+            """ The age axis of the proxa data """
         except KeyError:
             self.age=["unknown", "unknown"]
             
@@ -131,7 +140,7 @@ available datasets:
 
     def load_chron_data(self, save_in_object=False):
         """
-        Returns an xarray DataArray for the age model data with dimensions depth*ens where ens stands for the 
+        Loads the age model data. Returns an xarray DataArray for the age model data with dimensions depth*ens where ens stands for the 
         ensemble member dimension.
 
         Parameters:
@@ -208,13 +217,13 @@ available datasets:
             
     def load_paleo_data(self, data_set, coord="depth", quiet=False, save_in_object=False):
         """
-        Returns an xarray DataArray for the given data_set keyword. The coordinate can be depth or age.
+        Loads the proxy data, data can be chosen by data_set parameter. You can put "all" to load all available data. You can chose whether you want to work on the age or depth coordinate with the coord keyword argument. Returns an xarray DataArray for the given data_set keyword. The coordinate can be depth or age.
         
         Parameters:
         ---------------------------------
         :data_set:        string; must be listed in self.av_ds.
-                         For several datasets, put a list of strings.
-                         If you want all avalable datasets, put "all".
+                          For several datasets, put a list of strings.
+                          If you want all avalable datasets, put "all".
 
         :coord:           string; either "depth" ("depth_merged") or "age" ("updated age model (median)").
         :quiet:           boolean; print (False) or suppress (True) diagnostic output. Default is False.
@@ -327,10 +336,12 @@ available datasets:
         Parameters:
         ---------------------------------
         :method:          string; how to merge the depth axes (default: left):
-                              - "left": age model depth axis is used (destructive)
-                              - "right": proxy data depth axis is used (destructive)
-                              - "inner": intersection of depth axes is used (destructive)
-                            - "outer": union of depth axes is used (non-destructive)
+        
+                           - "left": age model depth axis is used (destructive)
+                           - "right": proxy data depth axis is used (destructive)
+                           - "inner": intersection of depth axes is used (destructive)
+                           - "outer": union of depth axes is used (non-destructive)
+                              
         :quiet:           boolean; print (False) or suppress (True) diagnostic output. Default is False.
         :save_in_object:  boolean; if True, the loaded data is available with the .data attribute. No xarray DataArray is returned.
         """
@@ -374,7 +385,7 @@ available datasets:
     
     class target():
         """
-        Target object, subclass of site_object.
+        Target object for proxy forward modeling (only available after running the method "create_target"), subclass of site_object.
         """      
         def __init__(self, record_var, sim_var, habitatSeason):
             # error for wrong keyword
