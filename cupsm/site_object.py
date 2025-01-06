@@ -52,11 +52,11 @@ class lipd2object:
         
         if path != None:
             self.path=path
-            """ The path where LiPD files are located """
+        """ The path where LiPD files are located """
             
         if file_name != None:
             self.fname=file_name
-            """ Name of the LiPD file """
+        """ Name of the LiPD file """
             
         # from lipd file
         self.site_name=loaded_file['geo']['siteName']
@@ -73,7 +73,7 @@ class lipd2object:
         
         try:
             self.age=loaded_file['paleoData']['paleo0']['measurementTable']['paleo0measurement0']['columns']['age']['values']
-            """ The age axis of the proxa data """
+        """ The age axis of the proxa data """
             
         except KeyError:
             self.age=["unknown", "unknown"]
@@ -403,7 +403,10 @@ available datasets:
             
             # set variable  names
             self.record_var = record_var
+            """ Record variable name """
+            
             self.sim_var = sim_var
+            """ Simulation variable name """
             
             # if habitat season keyword is a list of integers
             if habitatSeason not in ["summer", "winter", "annual", "unknown"] and isinstance(habitatSeason, list):

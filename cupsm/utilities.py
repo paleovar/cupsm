@@ -12,8 +12,11 @@ def do_to_180(dataobject, lon_name = 'lon', quiet=True):
     """
     Transforms the longitude coordinate from 0->360 to -180->+180 in place.
     
-    dataobject:   Xarray data object, can be DataSet or DataArray
-    lon_name:     string; name of the longitude dimension, default='lon'
+    Parameters:
+    ------------------------------
+    :dataobject:   xarray data object, can be DataSet or DataArray
+    :lon_name:     string; name of the longitude dimension, default='lon'
+    :quiet: boolean; print (False) or suppress (True) diagnostic output. Default is False.
     """
 
     lon_values = dataobject[lon_name].values

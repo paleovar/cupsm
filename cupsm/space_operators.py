@@ -21,7 +21,7 @@ def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False
     Interpolates the simulation data to the given site location. 
     Returns an xarray DataArray.
 
-    Note:
+    Notes:
     ------------------------------
     --> Usually lipd files report the coordinate longitude between -180°E and +180°E, so the longitude coordinate of the field may be transformed accordingly.
     

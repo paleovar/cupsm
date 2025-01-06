@@ -31,7 +31,7 @@ def time2chron(sim_data2site, site_object,
     (age ensemble) of the site object, using the provided mapping method. 
     The obtained forward-modelled proxy time series object is returned as a xarray DataArray.
 
-    Note:
+    Notes:
     ------------------------------
     
     --> In the case that the simulation data itself contains multiple ensemble members (e.g. created by adding additional noise due to application of cupsm.white_noise() or cupsm.ar1_noise()), each age ensemble member is paired with a randomly selected simulation data ensemble member during resampling. Hereby the first simulation data ensemble member is excluded from the random selection, as it is assumed to contain the original data that is free from additionally created noise (see also the documentation of cupsm.white_noise() or cupsm.ar1_noise()).
@@ -197,10 +197,10 @@ def provide_chron_data (site_object, sim_data, quiet):
     
     Parameters:
     ------------------------------
-    :site_object: Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details).
-    
+    :site_object: Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details). 
     :sim_data: xarray Dataarray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()) and resampled in time according to the target object attributes (as done by the helper function cupsm.resample_sim_data(), see documentation of cupsm.resample_sim_data for more details).
-    
+    :quiet: boolean; print (False) or suppress (True) diagnostic output. Default is False.
+
     """
     # load chron data
     chron_data = site_object.load_chron_data()
@@ -237,7 +237,7 @@ def _sampfunc_slice2point(i, forward_proxy, ens_chron, ens_chron_d,
 
     sampling_size  : integer; length of the sample in the depth axis in millimeter, only used if sampling method is "distant". 
 
-    quiet           : boolean; print (False) or suppress (True) diagnostic output. Default is False.
+    quiet          : boolean; print (False) or suppress (True) diagnostic output. Default is False.
     """
     
     ## Create bounds
