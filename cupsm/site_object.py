@@ -49,24 +49,32 @@ class lipd2object:
         # basic
         self.lipd=loaded_file
         """ The lipd file as it is read in with the python lipd package """
+        
         if path != None:
             self.path=path
             """ The path where LiPD files are located """
+            
         if file_name != None:
             self.fname=file_name
             """ Name of the LiPD file """
+            
         # from lipd file
         self.site_name=loaded_file['geo']['siteName']
         """ Name of the record site """"
+        
         self.coords=loaded_file['geo']['geometry']['coordinates'] #lon, lat, depth
         """ Proxy location in lon, lat, depth """"
+        
         self.archive_type=loaded_file['archiveType']
         """ Archive type, e.g. marine sediment """"
+        
         self.av_ds=list(loaded_file['paleoData']['paleo0']['measurementTable']['paleo0measurement0']['columns'].keys())
         """ Available data sets """"
+        
         try:
             self.age=loaded_file['paleoData']['paleo0']['measurementTable']['paleo0measurement0']['columns']['age']['values']
             """ The age axis of the proxa data """
+            
         except KeyError:
             self.age=["unknown", "unknown"]
             

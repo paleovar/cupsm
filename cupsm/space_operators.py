@@ -1,7 +1,8 @@
 """
-The code of this module deals with the spatial dimension. The forward-modeling operator "field2site" interpolates the simulation data (lon, lat, time) to a proxy site location. Two customizable interpolation methods are available. 
-It contains:
+The code of this module deals with the spatial dimension. The forward-modeling operator "field2site" interpolates the simulation data (lon, lat, time) to a proxy site location. Two customizable interpolation methods are available. It contains:
+
  - space operator "field2site"
+ 
 """
 # Further helper functions (excluded from ReadTheDocs documentation)
 #    - function "_dx_dy_in_meter"
@@ -17,25 +18,25 @@ from geopy.distance import great_circle
 # ~~~~~~~~~~~~~~~~~~~~~~
 def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False):
     """
-    Interpolates the simulation data to the given site location. Returns an xarray DataArray.
+    Interpolates the simulation data to the given site location. 
+    Returns an xarray DataArray.
 
     Note:
-    ----
-    --> Usually lipd files report the coordinate longitude between -180°E and +180°E, 
-    so the longitude coordinate of the field may be transformed accordingly.
-    --> To avoid artefacts, grid cells that are nan (empty/undefined) at any point 
-    on the time axis are ignored for the entire calculation. 
+    ------------------------------
+    --> Usually lipd files report the coordinate longitude between -180°E and +180°E, so the longitude coordinate of the field may be transformed accordingly.
+    
+    --> To avoid artefacts, grid cells that are nan (empty/undefined) at any point on the time axis are ignored for the entire calculation. 
     
     Parameters:
-    ----------
-    sim_data      : xarray DataArray of simulation data of interest.
-    site_obj      : Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details).
-    method        : Method for interpolation; available keywords "dist" (distance weighted
-                    mean over grid cells which are within radius) and "nn" (nearest grid cell
-                    which is not nan). Default is "dist".
-    radius_km     : Radius in km within which grid cells centers should be considered. 
-                    The default is radius_km=500.
-    plot_mask     : Bool, optional diagnostic plot of the weighting mask. Default is False.
+    ------------------------------
+    :sim_data:	xarray DataArray of simulation data of interest.
+    :site_obj:	Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details).
+    :method:	Method for interpolation; available keywords "dist" (distance weighted
+                mean over grid cells which are within radius) and "nn" (nearest grid cell
+                which is not nan). Default is "dist".
+    :radius_km:	Radius in km within which grid cells centers should be considered. 
+                The default is radius_km=500.
+    :plot_mask:	Bool, optional diagnostic plot of the weighting mask. Default is False.
     """
     # set variables
     x,y,_ = site_obj.coords
@@ -153,14 +154,13 @@ def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False
 # ~~~~~~~~~~~~~~~~~~~~~~
 def _dx_dy_in_meter(arr_x, arr_y):
     """
-    Returns the grid length elements dx and dy in meters for the given 
-    longitudes (x) and latitudes (y).
+    Returns the grid length elements dx and dy in meters for the given longitudes (x) and latitudes (y).
     Helper function for cupsm.field2site().
     
     Parameters
-    ----------
-    arr_x : array of longitudes
-    arr_y : array of latitudes
+    ------------------------------
+    :arr_x: array of longitudes
+    :arr_y: array of latitudes
     """
     # determine lon and lat resolution in the data
     values, counts = np.unique(np.diff(arr_x), return_counts=True)
