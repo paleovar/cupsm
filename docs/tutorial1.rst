@@ -1,11 +1,11 @@
 Tutorial 1: Getting started
-===============
+================================
 
 In this Example 1 we will choose proxy records and load their LiPD files
 as class objects.
 
 0. Preparations
----------------
+--------------------------------
 
 First, let’s import the necessary packages. Note that you must add the
 path to the ``cupsm`` code core in order for ``import cupsm`` to run
@@ -44,7 +44,7 @@ data (nc files in netcdf format).
     lipd_path =  # path to directory where LiPD files are
 
 1. Proxy overview table
------------------------
+-------------------------------------
 
 ``cupsm`` includes a helper infrastructure to easily handle LiPD files.
 
@@ -74,7 +74,7 @@ the ``create_proxy_info`` function.
 
 
 2. Record choice
-----------------
+-------------------------------
 
 ``cupsm`` provides a helper function ``get_records_df`` which returns a
 list of class objects, one for each record. These proxy record objects
