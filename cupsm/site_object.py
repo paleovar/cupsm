@@ -1,5 +1,6 @@
 """
 The module contains code to create the python class object from a loaded LiPD file and a target object for applying the operators.
+
 - class lipd2object
 - class target
 """
@@ -14,13 +15,14 @@ import xarray as xr
 
 class lipd2object:
     """
-    Creates a class object from a loaded lipd file. For initialization, one hands over a loaded lipd file (using the lipd package) to
-    the call. Usually, the class is called in the functions "get_records_df" and "create_proxy_info" from helper_lipd.py.
+    Creates a class object from a loaded lipd file. 
+    For initialization, one hands over a loaded lipd file (using the lipd package) to the call. Usually, the class is called in the functions 
+    "get_records_df" and "create_proxy_info" from helper_lipd.py.
 
     After initialization the following attributes and methods are available:
 
     Attributes:
-    ------------
+    ------------------------------------
     - age:          the age axis of the proxa data
     - archive_type: archive type, e.g. marine sediment
     - av_ds:        available data sets
@@ -32,7 +34,7 @@ class lipd2object:
     - target:       target object for proxy forward modeling (only available after running the method "create_target")
     
     Methods:
-    ------------
+    ------------------------------------
     - create_target:    creates a target subclass for proxy forward modeling, saved in lipd2object.target attribute
     - info:             prints a basic overview of the record
     - load:             loads all paleo/proxy data and age model data and combines them in one xarray DataSet
@@ -133,8 +135,8 @@ available datasets:
         ensemble member dimension.
 
         Parameters:
-        ----------
-        save_in_object:  boolean; if True, the loaded data is available with the .data attribute. No xarray DataArray is returned.
+        ---------------------------------
+        :save_in_object:  boolean; if True, the loaded data is available with the .data attribute. No xarray DataArray is returned.
         """
         if 'chronData' in self.lipd.keys():
             
@@ -209,14 +211,14 @@ available datasets:
         Returns an xarray DataArray for the given data_set keyword. The coordinate can be depth or age.
         
         Parameters:
-        ----------
-        data_set:        string; must be listed in self.av_ds.
+        ---------------------------------
+        :data_set:        string; must be listed in self.av_ds.
                          For several datasets, put a list of strings.
                          If you want all avalable datasets, put "all".
 
-        coord:           string; either "depth" ("depth_merged") or "age" ("updated age model (median)").
-        quiet:           boolean; print (False) or suppress (True) diagnostic output. Default is False.
-        save_in_object:  boolean; if True, the loaded data is available with the .data attribute. No xarray DataArray is returned.
+        :coord:           string; either "depth" ("depth_merged") or "age" ("updated age model (median)").
+        :quiet:           boolean; print (False) or suppress (True) diagnostic output. Default is False.
+        :save_in_object:  boolean; if True, the loaded data is available with the .data attribute. No xarray DataArray is returned.
         """
         # Preparation
         print_naming_warning = False
@@ -323,14 +325,14 @@ available datasets:
         xarray dataset. A common depth axis is chosen.
 
         Parameters:
-        ----------
-        method:          string; how to merge the depth axes (default: left):
+        ---------------------------------
+        :method:          string; how to merge the depth axes (default: left):
                               - "left": age model depth axis is used (destructive)
                               - "right": proxy data depth axis is used (destructive)
                               - "inner": intersection of depth axes is used (destructive)
                             - "outer": union of depth axes is used (non-destructive)
-        quiet:           boolean; print (False) or suppress (True) diagnostic output. Default is False.
-        save_in_object:  boolean; if True, the loaded data is available with the .data attribute. No xarray DataArray is returned.
+        :quiet:           boolean; print (False) or suppress (True) diagnostic output. Default is False.
+        :save_in_object:  boolean; if True, the loaded data is available with the .data attribute. No xarray DataArray is returned.
         """
         chron_data = self.load_chron_data()
         paleo_data = self.load_paleo_data("all", quiet=quiet)
@@ -357,12 +359,14 @@ available datasets:
         Creates a target object to contain user defined selections for the paleo data. The object is required for the application of the operators and is included in the site_obejct as site_object.target.
     
         Parameters:
-        ------------
-        - record_var:     string; the variable name of the paleo dataset
-        - sim_var:        string; the variable name of the simulation dataset
-        - habitatSeason:  string or list of integers; 
+        ---------------------------------
+        :record_var:     string; the variable name of the paleo dataset
+        :sim_var:        string; the variable name of the simulation dataset
+        :habitatSeason:  string or list of integers; 
+        
                 - string; valid keywords are "summer", "winter" or "annual". Refers to the local season (e.g. austral summer is summer).
                 - list of integers; indices of the month for which the paleo data are representative (for example, for boreal summer temperatures, month_i could be [7,8,9] for samples taken in July, August and September).
+                
         """
         
         # Create a target instance of SubClass as an attribute

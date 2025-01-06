@@ -2,7 +2,7 @@
 The code of this module deals with the time axes of the simulation data and the proxy data. The forward-modeling operator "time2chron" resamples the simulation data according to the target requirements and the chronology data (age ensemble) of the site object. It contains:
 
 - chron operator "time2chron" 
-- chron operator helpers
+- chron operator helpers:
 
     - function "resample_sim_data"
     - function "provide_chron_data"
@@ -27,8 +27,8 @@ def time2chron(sim_data2site, site_object,
                method="point2point", sampling=None, sampling_size=None,
                quiet=False, return_resampled=False):
     """
-    Resamples the simulation data in time according to the target requirements and the chronology data (age ensemble) of the site object, 
-    using the provided mapping method. 
+    Resamples the simulation data in time according to the target requirements and the chronology data 
+    (age ensemble) of the site object, using the provided mapping method. 
     The obtained forward-modelled proxy time series object is returned as a xarray DataArray.
 
     Note:
@@ -40,29 +40,29 @@ def time2chron(sim_data2site, site_object,
 
     Parameters:
     -----------------------------
-    :param sim_data2site: xarray DataArray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()).
+    :sim_data2site: xarray DataArray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()).
     
-    :param site_object: Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details). A target must have been initialized before by calling the method site_object.create_target().
+    :site_object: Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details). A target must have been initialized before by calling the method site_object.create_target().
                         
-    :param method: string; mapping method between simulation and proxy time axis. Available keywords are:
+    :method: string; mapping method between simulation and proxy time axis. Available keywords are:
     
                             - point2point: For resampling the simulation data, the time axes of the simulation data and the chronology data are compared point to point. The target variable from the simulation data is then selected at those time steps. Faster.
                             - slice2point: This method assumes that a measurement point in the proxy data is actually an integration over a measured slice (e.g., a slice from a sediment core). Thus, this method compares a time slice in time axis of the simulation data to the chronology data of the proxy record. The variable from the simulation data is then selected within these time slices and averaged over the slice. The method makes different assumptions depending on the keyword "sampling" which determines the slice  sizes (see below). Takes longer.
                         
                         Default is "point2point".
                         
-    :param sampling: string; sampling method, determines slice bounds and sizes. Only used if mapping method is "slice2point". Available keywords are: 
+    :sampling: string; sampling method, determines slice bounds and sizes. Only used if mapping method is "slice2point". Available keywords are: 
     
                             - "adjacent": This method assumes that the entire material of a proxy record (e.g., a sediment core) is used for the measurement and that resulting slices are adjacent. The depth axis of the proxy data corresponds to the midpoints of these slices. The method determines the upper and lower bounds by halving the distance between two consecutive depth values.
                             - "distant":  This method assumes that the measurements in the proxy record material were taken at the depth values given in the depth axis of the proxy data. These are the midpoints of a measurement sampling slice with a fixed sampling size, which is set by the "sampling_size" keyword (see below).
                                           
                       Default is None, must be changed if method is changed to "slice2point".
 
-    :param sampling_size: integer; length of the sample in the depth axis in millimeter, only used if sampling method is "distant". Default is 10mm.
+    :sampling_size: integer; length of the sample in the depth axis in millimeter, only used if sampling method is "distant". Default is 10mm.
 
-    :param quiet: boolean; print (False) or suppress (True) diagnostic output. Default is False.
+    :quiet: boolean; print (False) or suppress (True) diagnostic output. Default is False.
 
-    :param return_resampled: boolean; if True, the simulation data is returned after resampling in time according to the target object attributes as xarray DataArray. Default is False.
+    :return_resampled: boolean; if True, the simulation data is returned after resampling in time according to the target object attributes as xarray DataArray. Default is False.
 
     """
     ## Prior checks:
@@ -145,14 +145,14 @@ def time2chron(sim_data2site, site_object,
 # ~~~~~~~~~~~~~~~~~~~~~~
 def resample_sim_data(sim_data, site_object):
     """
-    Resamples the given simulation data based on the attributes of the target object, subclass of the site_object. Returns result as a xarray Dataarray. Helper function
-    for cupsm.time2chron().
+    Resamples the given simulation data based on the attributes of the target object
+    , subclass of the site_object. Returns result as a xarray Dataarray. Helper function for cupsm.time2chron().
 
     Parameters:
     ------------------------------------
-    sim_data        : xarray Dataarray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()).
+    :sim_data: xarray Dataarray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()).
                       
-    site_object        : Site object of interest with subclass target initialized and available at site_object.target.
+    :site_object: Site object of interest with subclass target initialized and available at site_object.target.
     
     """
     # sort time axis of the simulation data (that resampling works)
@@ -192,14 +192,14 @@ def resample_sim_data(sim_data, site_object):
 
 def provide_chron_data (site_object, sim_data, quiet):
     """
-    Converts site object chronology data from kiloyears to years, rounds it to annual scale and cuts it accordingly to the age limits of the provided simulation data. 
+    Converts site object chronology data from kiloyears to years, rounds it to annual scale and cuts it according to the age limits of the provided simulation data. 
     The result is returned as a xarray Datarray. Helper function for cupsm.time2chron().
     
     Parameters:
     ------------------------------
-    site_object        : Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details).
+    :site_object: Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details).
     
-    sim_data        : xarray Dataarray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()) and resampled in time according to the target object attributes (as done by the helper function cupsm.resample_sim_data(), see documentation of cupsm.resample_sim_data for more details).
+    :sim_data: xarray Dataarray of simulation data interpolated to the site location of interest (e.g. precomputed with cupsm.field2site()) and resampled in time according to the target object attributes (as done by the helper function cupsm.resample_sim_data(), see documentation of cupsm.resample_sim_data for more details).
     
     """
     # load chron data
