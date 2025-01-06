@@ -267,10 +267,15 @@ def _sampfunc_slice2point(i, forward_proxy, ens_chron, ens_chron_d,
         # bounds
         lower = lower_bounds[j]
         upper = upper_bounds[j]
-        # mask and mean
-        mean = sim_data_rand.sel(year=slice(lower, upper)).mean()
-        # write data in
-        forward_proxy[j,i] = mean
+        # if there is only one data point the bounds are nan, do a point2point mapping
+        if np.isnan(lower) or np.isnan(upper):
+            # write data in
+            forward_proxy[j,i] = sim_data_rand.sel(year=ens_chron[j], method="nearest")
+        else:
+            # mask and mean
+            mean = sim_data_rand.sel(year=slice(lower, upper)).mean()
+            # write data in
+            forward_proxy[j,i] = mean
         
     return forward_proxy 
 
@@ -317,6 +322,14 @@ def _create_bounds_adjacent(ens_chron, ens_chron_red, sim_data_rand, quiet):
     Determines the upper and lower bounds of the time slices for the simulation data over which will be averaged. Assumes adjacent slices.
     Helper function for cupsm._sampfunc_slice2point().
     """
+    # check if there are too little data points
+    if ens_chron_red.shape[0] < 2:
+        lower_bounds_with_nan = np.full(ens_chron.shape, np.nan) 
+        upper_bounds_with_nan = lower_bounds_with_nan.copy()
+
+        # return only nan
+        return lower_bounds_with_nan, upper_bounds_with_nan
+    
     # create 2 empty arrays
     lower_bounds = np.full(ens_chron_red.shape, 0) 
     upper_bounds = lower_bounds.copy()
@@ -362,7 +375,7 @@ def _create_bounds_distant(ens_chron, ens_chron_d, ens_chron_red, sim_data_rand,
 
     # interpolate to finer depth axis
     step=0.001 #resolution in m
-    depth_interp = np.arange(depth_red[0], depth_red[-1]+step,step=step) #target depth axis
+    depth_interp = np.arange(depth_red[0]-10*step, depth_red[-1]+10*step,step=step) #target depth axis
     ages_interp = np.round(np.interp(depth_interp, depth_red, ens_chron_red)).astype(int) #interpolated ages
 
     # create DataArrays:
