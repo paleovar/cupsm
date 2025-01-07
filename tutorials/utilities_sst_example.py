@@ -9,6 +9,7 @@
 
 import xarray as xr
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Code that only runs when the script is executed directly
 if __name__ == "__main__":
