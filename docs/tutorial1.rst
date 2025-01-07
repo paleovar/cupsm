@@ -1,11 +1,11 @@
 Tutorial 1: Getting started
-================================
+===========================
 
 In this Example 1 we will choose proxy records and load their LiPD files
 as class objects.
 
 0. Preparations
---------------------------------
+---------------
 
 First, let’s import the necessary packages. Note that you must add the
 path to the ``cupsm`` code core in order for ``import cupsm`` to run
@@ -44,7 +44,7 @@ data (nc files in netcdf format).
     lipd_path =  # path to directory where LiPD files are
 
 1. Proxy overview table
--------------------------------------
+-----------------------
 
 ``cupsm`` includes a helper infrastructure to easily handle LiPD files.
 
@@ -73,8 +73,181 @@ the ``create_proxy_info`` function.
     For updating the file, run with the update=True
 
 
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>path</th>
+          <th>file</th>
+          <th>archive</th>
+          <th>lon</th>
+          <th>lat</th>
+          <th>elevation</th>
+          <th>age_min</th>
+          <th>age_max</th>
+          <th>agemodel</th>
+          <th>depth_merged</th>
+          <th>...</th>
+          <th>planktonic.d18O-6</th>
+          <th>planktonic.d13C-6</th>
+          <th>TOC.error</th>
+          <th>C37.concentration-1</th>
+          <th>surface.temp-5</th>
+          <th>surface.temp-6</th>
+          <th>IRD-1</th>
+          <th>planktonic.MgCa-3</th>
+          <th>UK37-1</th>
+          <th>depth_uncorrected</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>MD88_770</th>
+          <td>/data/obs/proxy_databases/PalMod130k/PALMOD130...</td>
+          <td>MD88_770.lpd</td>
+          <td>marine sediment</td>
+          <td>96.4614</td>
+          <td>-46.0214</td>
+          <td>-3290.0</td>
+          <td>6.34841</td>
+          <td>18.567262</td>
+          <td>True</td>
+          <td>True</td>
+          <td>...</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+        </tr>
+        <tr>
+          <th>GIK18471_1</th>
+          <td>/data/obs/proxy_databases/PalMod130k/PALMOD130...</td>
+          <td>GIK18471_1.lpd</td>
+          <td>marine sediment</td>
+          <td>129.9830</td>
+          <td>-9.3665</td>
+          <td>-485.0</td>
+          <td>4.272588</td>
+          <td>130.610203</td>
+          <td>True</td>
+          <td>True</td>
+          <td>...</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+        </tr>
+        <tr>
+          <th>182_1132B</th>
+          <td>/data/obs/proxy_databases/PalMod130k/PALMOD130...</td>
+          <td>182_1132B.lpd</td>
+          <td>marine sediment</td>
+          <td>127.6022</td>
+          <td>-33.3162</td>
+          <td>-218.5</td>
+          <td>29.954729</td>
+          <td>132.101998</td>
+          <td>True</td>
+          <td>True</td>
+          <td>...</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+        </tr>
+        <tr>
+          <th>MD95_2039</th>
+          <td>/data/obs/proxy_databases/PalMod130k/PALMOD130...</td>
+          <td>MD95_2039.lpd</td>
+          <td>marine sediment</td>
+          <td>-10.3485</td>
+          <td>40.5785</td>
+          <td>-3381.0</td>
+          <td>6.62868</td>
+          <td>126.912131</td>
+          <td>True</td>
+          <td>True</td>
+          <td>...</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+        </tr>
+        <tr>
+          <th>KNR166_2_105</th>
+          <td>/data/obs/proxy_databases/PalMod130k/PALMOD130...</td>
+          <td>KNR166_2_105.lpd</td>
+          <td>marine sediment</td>
+          <td>-79.2294</td>
+          <td>24.5639</td>
+          <td>-304.0</td>
+          <td>0.272656</td>
+          <td>4.677325</td>
+          <td>True</td>
+          <td>True</td>
+          <td>...</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+          <td>False</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>5 rows × 111 columns</p>
+    </div>
+
+
+
 2. Record choice
--------------------------------
+----------------
 
 ``cupsm`` provides a helper function ``get_records_df`` which returns a
 list of class objects, one for each record. These proxy record objects
@@ -638,7 +811,7 @@ argument ``quiet=True``. The attributes are also integrated into the
 
 
 
-.. image:: output_17_0.png
+.. image:: pics_tutorial1/output_17_0.png
 
 
 Next, we create a small map plot of the chosen records. For that, we
@@ -678,7 +851,7 @@ first extract their positions:
 
 
 
-.. image:: output_20_0.png
+.. image:: pics_tutorial1/output_20_0.png
 
 
 2) Chosen by file name
