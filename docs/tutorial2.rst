@@ -1990,6 +1990,7 @@ the ``sim_data``.
 
 When applying the space operator, you can choose between two
 interpolation methods:
+
  - ``nn``: nearest grid cell which is not nan 
  - ``dist``: distance weighted mean over grid cells which are within radius (default: 500 km)
 
