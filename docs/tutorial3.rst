@@ -662,8 +662,6 @@ ensemble members to be generated.
 
 .. parsed-literal::
 
-    [0;31mSignature:[0m [0mcupsm[0m[0;34m.[0m[0mwhite_noise[0m[0;34m([0m[0msim_data[0m[0;34m,[0m [0mnum_ensemble[0m[0;34m,[0m [0mmu[0m[0;34m=[0m[0;36m0[0m[0;34m,[0m [0msigma[0m[0;34m=[0m[0;36m1[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-    [0;31mDocstring:[0m
     Creates white noise by filling an array in shape of the input data with randomly drawn values from a normal (Gaussian) distribution. 
     Adds this white noise to the input data and saves the result as a new (white noise) ensemble member. 
     Multiple new ensemble members can be created. The original input data is kept as the first ensemble member. 
@@ -675,8 +673,6 @@ ensemble members to be generated.
     :num_ensemble:   integer; number of additional white noise ensemble members to be created.
     :mu:             float; mean of the normal distribution. Default is mu=0.
     :sigma:          float; standard deviation of the normal distribution. Default is sigma=1.
-    [0;31mFile:[0m      ~/Code/Python/cupsm/cupsm/variable_operators.py
-    [0;31mType:[0m      function
 
 
 .. code:: ipython3
@@ -1291,8 +1287,8 @@ latitude 0°N and longitude 0°E).
 .. image:: pics_tutorial3/output_22_1.png
 
 
-2. Initialize example site and its target
------------------------------------------
+3. Initialize example site and its target
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For this example, we will again select an example site from our list of
 LiPD sites (see Tutorial 1). Let’s use ``cupsm.get_records_df`` to load
@@ -1311,9 +1307,6 @@ the overview table and print the metadata of the selected site
 
 .. parsed-literal::
 
-    The .proxy_meta_data.pkl file is already present in /data/projects/nfdi4earth/ and is returned.
-    For updating the file, run with the update=True
-    
     marine sediment record MD98_2181 (0.07 - 28.01 ka)
     Position: lon=125.8274°E, lat=6.3°N, elevation=-2114m
     available datasets:
@@ -1330,7 +1323,8 @@ to be annual in the end, to keep potential biases small).
     # initialize target
     example_site.create_target(record_var="surface_temp_1", sim_var="tos", habitatSeason="unknown")
 
-## 3. Apply space operator
+4. Apply space operator
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Next, we want to use the space operator to map the spatial field of
 ``example_sim_data_wn`` onto the spatial structure of the
@@ -1808,8 +1802,8 @@ first 100 time steps of the time axis.
 .. image:: pics_tutorial3/output_33_1.png
 
 
-4. Apply chron operator
------------------------
+5. Apply chron operator
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As demonstrated in Tutorial 2, we will now apply the chronologies
 operator ``cupsm.time2chron`` to map the example_sim_data_wn2site time

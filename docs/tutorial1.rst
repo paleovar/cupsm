@@ -1,13 +1,21 @@
 Tutorial 1: Getting started
 ===========================
 
-In this Example 1 we will choose proxy records and load their LiPD files
-as class objects.
+In this Tutorial 1 we will choose proxy records and load their LiPD
+files as class objects.
 
 0. Preparations
 ---------------
 
-First, let’s import the necessary packages. Note that you must add the
+Make sure you have all the dependencies for cupsm installed. You will
+need numpy, xarray, pandas, geopy, lipd, dask and numba. A prepared
+conda environment file is available
+`here <https://github.com/paleovar/cupsm/tree/main/tutorials/condaenv_python-3.11.7.yml>`__.
+See the
+`README <https://github.com/paleovar/cupsm/blob/main/README.md>`__ for
+instructions on setting up the environment.
+
+Next, let’s import the necessary packages. Note that you must add the
 path to the ``cupsm`` code core in order for ``import cupsm`` to run
 successfully.
 
@@ -33,15 +41,27 @@ successfully.
     import cartopy
     import cartopy.crs as ccrs
 
-In this example we are working with real data from paleoclimate science.
-In the folder ``data`` you will find wget scripts to download the
-datasets used here. The wget scripts have been tested and used on Linux
-only. You can also use your own proxy data (LiPD files) or simulation
-data (nc files in netcdf format).
+In the tutorial series, we are working with real data from paleoclimate
+science. In the
+`data <https://github.com/paleovar/cupsm/tree/main/data>`__ directory
+you will find wget scripts to download the datasets used here. The wget
+scripts have been tested and used on Linux only. You can also use your
+own proxy data (LiPD files) or simulation data (files in netcdf format).
+
+In this first tutorial, we will use the `PALMOD 130k marine
+palaeoclimate data synthesis
+V1_0_1 <https://doi.org/10.1594/PANGAEA.914466>`__ data set. More
+information about the dataset can be found in the associated
+`publication <https://doi.org/10.5194/essd-12-1053-2020>`__. You can
+either download it manually
+`here <https://store.pangaea.de/Publications/Jonkers-etal_2019/V1_0_1/LiPD.zip>`__
+as a .zip file, or use the `wget
+script <https://github.com/paleovar/cupsm/blob/main/data/wget_sst_reconstruction_databaset_20241212.sh>`__
+to download it to your coputer.
 
 .. code:: ipython3
 
-    lipd_path =  # path to directory where LiPD files are
+    lipd_path = # path to directory where LiPD files are
 
 1. Proxy overview table
 -----------------------
@@ -59,190 +79,13 @@ the ``create_proxy_info`` function.
 
 .. code:: ipython3
 
-    table_path =  # path where the overview table should be stored
+    table_path = # path where the overview table should be stored
 
 .. code:: ipython3
 
     proxy_overview_table = cupsm.create_proxy_info(database_path=lipd_path, save_path=table_path) # create table
     proxy_overview_table.head() # show head of the table
 
-
-.. parsed-literal::
-
-    The .proxy_meta_data.pkl file is already present in /data/projects/nfdi4earth/ and is returned.
-    For updating the file, run with the update=True
-
-
-
-
-.. raw:: html
-
-    <div>
-    <style scoped>
-        .dataframe tbody tr th:only-of-type {
-            vertical-align: middle;
-        }
-    
-        .dataframe tbody tr th {
-            vertical-align: top;
-        }
-    
-        .dataframe thead th {
-            text-align: right;
-        }
-    </style>
-    <table border="1" class="dataframe">
-      <thead>
-        <tr style="text-align: right;">
-          <th></th>
-          <th>path</th>
-          <th>file</th>
-          <th>archive</th>
-          <th>lon</th>
-          <th>lat</th>
-          <th>elevation</th>
-          <th>age_min</th>
-          <th>age_max</th>
-          <th>agemodel</th>
-          <th>depth_merged</th>
-          <th>...</th>
-          <th>planktonic.d18O-6</th>
-          <th>planktonic.d13C-6</th>
-          <th>TOC.error</th>
-          <th>C37.concentration-1</th>
-          <th>surface.temp-5</th>
-          <th>surface.temp-6</th>
-          <th>IRD-1</th>
-          <th>planktonic.MgCa-3</th>
-          <th>UK37-1</th>
-          <th>depth_uncorrected</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>MD88_770</th>
-          <td>/data/obs/proxy_databases/PalMod130k/PALMOD130...</td>
-          <td>MD88_770.lpd</td>
-          <td>marine sediment</td>
-          <td>96.4614</td>
-          <td>-46.0214</td>
-          <td>-3290.0</td>
-          <td>6.34841</td>
-          <td>18.567262</td>
-          <td>True</td>
-          <td>True</td>
-          <td>...</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-        </tr>
-        <tr>
-          <th>GIK18471_1</th>
-          <td>/data/obs/proxy_databases/PalMod130k/PALMOD130...</td>
-          <td>GIK18471_1.lpd</td>
-          <td>marine sediment</td>
-          <td>129.9830</td>
-          <td>-9.3665</td>
-          <td>-485.0</td>
-          <td>4.272588</td>
-          <td>130.610203</td>
-          <td>True</td>
-          <td>True</td>
-          <td>...</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-        </tr>
-        <tr>
-          <th>182_1132B</th>
-          <td>/data/obs/proxy_databases/PalMod130k/PALMOD130...</td>
-          <td>182_1132B.lpd</td>
-          <td>marine sediment</td>
-          <td>127.6022</td>
-          <td>-33.3162</td>
-          <td>-218.5</td>
-          <td>29.954729</td>
-          <td>132.101998</td>
-          <td>True</td>
-          <td>True</td>
-          <td>...</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-        </tr>
-        <tr>
-          <th>MD95_2039</th>
-          <td>/data/obs/proxy_databases/PalMod130k/PALMOD130...</td>
-          <td>MD95_2039.lpd</td>
-          <td>marine sediment</td>
-          <td>-10.3485</td>
-          <td>40.5785</td>
-          <td>-3381.0</td>
-          <td>6.62868</td>
-          <td>126.912131</td>
-          <td>True</td>
-          <td>True</td>
-          <td>...</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-        </tr>
-        <tr>
-          <th>KNR166_2_105</th>
-          <td>/data/obs/proxy_databases/PalMod130k/PALMOD130...</td>
-          <td>KNR166_2_105.lpd</td>
-          <td>marine sediment</td>
-          <td>-79.2294</td>
-          <td>24.5639</td>
-          <td>-304.0</td>
-          <td>0.272656</td>
-          <td>4.677325</td>
-          <td>True</td>
-          <td>True</td>
-          <td>...</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-          <td>False</td>
-        </tr>
-      </tbody>
-    </table>
-    <p>5 rows × 111 columns</p>
-    </div>
 
 
 
@@ -251,14 +94,16 @@ the ``create_proxy_info`` function.
 
 ``cupsm`` provides a helper function ``get_records_df`` which returns a
 list of class objects, one for each record. These proxy record objects
-**ObsData** contain the proxy data as ``xarray`` ``DataSet`` and the
+**obs_data** contain the proxy data as ``xarray`` ``DataSet`` and the
 metadata of the specific record. Records can be chosen by function
 parameters and keyword arguments. We will go through two examples and
-explore the ObsData object on the fly: 1) Chosen by location
+explore the obs_data object on the fly: 
 
-i) Explore ObsData object
+ 1) Chosen by location
+    
+    -) Explore obs_data object
 
-3) Chosen by file name
+ 2) Chosen by file name
 
 Type ``?cupsm.get_records_df`` for more information on available
 arguments.
@@ -272,7 +117,7 @@ latitudes (30°S-30°N). This can be done with the ``location`` and
 
 .. code:: ipython3
 
-    ObsData_tropics = cupsm.get_records_df(proxy_overview_table, location=[True, 0], loc_radius=[0,30])
+    obs_data_tropics = cupsm.get_records_df(proxy_overview_table, location=[True, 0], loc_radius=[0,30])
 
 
 .. parsed-literal::
@@ -280,14 +125,14 @@ latitudes (30°S-30°N). This can be done with the ``location`` and
     I return a list with 54 record objects at [True, 0] +/- [0, 30].
 
 
-Explore ObsData object
-^^^^^^^^^^^^^^^^^^^^^^
+Explore obs_data object
+^^^^^^^^^^^^^^^^^^^^^^^
 
-Let’s explore the first item of the list ``ObsData_tropics[0]``:
+Let’s explore the first item of the list ``obs_data_tropics[0]``:
 
 .. code:: ipython3
 
-    example_object = ObsData_tropics[0] # take first object
+    example_object = obs_data_tropics[0] # take first object
     
     print("Available attributes and methods are:")
     [att for att in dir(example_object) if "__" not in att]
@@ -306,6 +151,7 @@ Let’s explore the first item of the list ``ObsData_tropics[0]``:
      'archive_type',
      'av_ds',
      'coords',
+     'create_target',
      'fname',
      'info',
      'lipd',
@@ -313,24 +159,32 @@ Let’s explore the first item of the list ``ObsData_tropics[0]``:
      'load_chron_data',
      'load_paleo_data',
      'path',
-     'site_name']
+     'site_name',
+     'target']
 
 
 
 Short explanation of the available attributes and methods:
 
-**Attributes:** - ``age``: the age axis of the proxa data - ``av_ds``:
-available data sets - ``fname``: name of the LiPD file - ``lipd``: the
-lipd file as it is read in with the python lipd package - ``path``: the
-path where LiPD files are located - ``sitename``: name of the record
-site
+**Attributes:** 
+  
+ - ``age``: the age axis of the proxa data 
+ - ``archive_type``: archive type, e.g. marine sediment 
+ - ``av_ds``: available data sets 
+ - ``coords``: proxy location in lon, lat, depth 
+ - ``fname``: name of the LiPD file 
+ - ``lipd``: the lipd file as it is read in with the python lipd package 
+ - ``path``: the path where LiPD files are located 
+ - ``site_name``: name of the record site 
+ - ``target``: target object for proxy forward modeling (see Tutorial 2)
 
-**Methods:** - ``info``: prints a basic overview of the record -
-``load``: loads all paleo/proxy data and age model data and combines
-them in one ``xarray`` ``DataSet`` - ``load_chron_data``: loads the age
-model data - ``laod_paleo_data``: loads the proxy data, data can be
-chosen by ``data_set`` parameter. You can put ``"all"`` to load all
-available data. You can chose whether you want to work on the ``age`` or
+**Methods:** 
+
+ - ``create_target``: creates a target subclass for proxy forward modeling (see Tutorial 2) 
+ - ``info``: prints a basic overview of the record 
+ - ``load``: loads all paleo/proxy data and age model data and combines them in one ``xarray`` ``DataSet`` 
+ - ``load_chron_data``: loads the age model data 
+ - ``laod_paleo_data``: loads the proxy data, data can be chosen by ``data_set`` parameter. You can put ``"all"`` to load all available data. You can chose whether you want to work on the ``age`` or
 ``depth`` coordinate with the ``coord`` keyword argument.
 
 .. code:: ipython3
@@ -736,7 +590,7 @@ available data. You can chose whether you want to work on the ``age`` or
         deep_temp  (age) float64 9.18 nan 9.96 nan nan ... 10.5 11.83 9.6 11.45 8.63
     Attributes:
         description:  Measured paleo data from GIK18471_1.
-        note:         Variables were renamed, e.g. &#x27;planktonic.d18O-1&#x27; --&gt; &#x27;plank...</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-75764833-1e77-4102-90dc-e14204c9a1fb' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-75764833-1e77-4102-90dc-e14204c9a1fb' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>age</span>: 162</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-7160a2ba-0ded-4eaa-a0e2-66ceed15dc98' class='xr-section-summary-in' type='checkbox'  checked><label for='section-7160a2ba-0ded-4eaa-a0e2-66ceed15dc98' class='xr-section-summary' >Coordinates: <span>(1)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>age</span></div><div class='xr-var-dims'>(age)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>4.273 7.438 10.88 ... 130.6 nan</div><input id='attrs-61488ff1-f1c5-49b4-b5ee-c496ef58d8ec' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-61488ff1-f1c5-49b4-b5ee-c496ef58d8ec' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-ba749a1d-44db-4e97-bead-c6a93c0ba6ed' class='xr-var-data-in' type='checkbox'><label for='data-ba749a1d-44db-4e97-bead-c6a93c0ba6ed' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([  4.272588,   7.438001,  10.876248,  13.093255,  14.254921,  15.536879,
+        note:         Variables were renamed, e.g. &#x27;planktonic.d18O-1&#x27; --&gt; &#x27;plank...</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-493c3c08-b811-4c26-9770-cc5ef7ad6533' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-493c3c08-b811-4c26-9770-cc5ef7ad6533' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>age</span>: 162</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-259c220c-5ce1-4819-bf23-c2769a66576c' class='xr-section-summary-in' type='checkbox'  checked><label for='section-259c220c-5ce1-4819-bf23-c2769a66576c' class='xr-section-summary' >Coordinates: <span>(1)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>age</span></div><div class='xr-var-dims'>(age)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>4.273 7.438 10.88 ... 130.6 nan</div><input id='attrs-f224f289-ac43-4972-bb37-bdaa18ea6bd0' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-f224f289-ac43-4972-bb37-bdaa18ea6bd0' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-fe4d97b3-5fd1-4a05-8ef3-9ce21a682391' class='xr-var-data-in' type='checkbox'><label for='data-fe4d97b3-5fd1-4a05-8ef3-9ce21a682391' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([  4.272588,   7.438001,  10.876248,  13.093255,  14.254921,  15.536879,
             16.533205,  17.507282,  18.538825,  19.307662,  20.332743,  21.453493,
             22.545045,  23.613849,  24.449982,  25.259067,  26.051154,  26.896619,
             27.75289 ,  28.464402,  29.238788,  30.023037,  30.834238,  31.671897,
@@ -762,7 +616,7 @@ available data. You can chose whether you want to work on the ``age`` or
            102.085151, 103.414717, 104.803032, 106.159992, 107.390788, 108.701269,
            110.090861, 111.416337, 112.862136, 114.379293, 115.75147 , 117.040952,
            118.264329, 119.480957, 120.720019, 121.936357, 123.106417, 124.3606  ,
-           125.596404, 126.86439 , 128.133559, 129.375633, 130.610203,        nan])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-56f6a435-fb65-44ae-bc54-b43b7845a4c8' class='xr-section-summary-in' type='checkbox'  checked><label for='section-56f6a435-fb65-44ae-bc54-b43b7845a4c8' class='xr-section-summary' >Data variables: <span>(1)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>deep_temp</span></div><div class='xr-var-dims'>(age)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>9.18 nan 9.96 ... 9.6 11.45 8.63</div><input id='attrs-cf30eaf4-0a72-4518-8425-7241a59cb56a' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-cf30eaf4-0a72-4518-8425-7241a59cb56a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-aeea1b8e-9a4d-4bd6-8620-9b8568b60aad' class='xr-var-data-in' type='checkbox'><label for='data-aeea1b8e-9a4d-4bd6-8620-9b8568b60aad' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>description :</span></dt><dd>BWT_degC</dd><dt><span>variableName :</span></dt><dd>deep.temp</dd><dt><span>variableType :</span></dt><dd>inferred</dd><dt><span>units :</span></dt><dd>degC</dd><dt><span>measurementMaterial :</span></dt><dd>MgCa</dd><dt><span>sensorSpecies :</span></dt><dd>H. elegans</dd><dt><span>calibrationEquation :</span></dt><dd>Mg/Ca = 0.31 ± 0.06 exp. (0.14 ± 0.01) BWT</dd><dt><span>calibrationDOI :</span></dt><dd>10.1016/j.marmicro.2015.10.001</dd><dt><span>hasPubDOI :</span></dt><dd>10.1016/j.palaeo.2016.09.010</dd><dt><span>hasDataLink :</span></dt><dd>https://doi.pangaea.de/10.1594/PANGAEA.864731</dd><dt><span>TSid :</span></dt><dd>RPfJpqV9Evf</dd><dt><span>hasResolution :</span></dt><dd>{&#x27;hasMinValue&#x27;: 0.30914322675820216, &#x27;hasMaxValue&#x27;: 6.603659408264199, &#x27;hasMeanValue&#x27;: 1.1697927260271925, &#x27;hasMedianValue&#x27;: 0.8139695747599021}</dd><dt><span>hasMinValue :</span></dt><dd>6.13</dd><dt><span>hasMaxValue :</span></dt><dd>13.37</dd><dt><span>hasMeanValue :</span></dt><dd>9.349107142857141</dd><dt><span>hasMedianValue :</span></dt><dd>9.3</dd></dl></div><div class='xr-var-data'><pre>array([ 9.18,   nan,  9.96,   nan,   nan, 10.46,  9.52, 10.32,   nan,
+           125.596404, 126.86439 , 128.133559, 129.375633, 130.610203,        nan])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-b48426f8-0481-40db-9d7b-716ce590e816' class='xr-section-summary-in' type='checkbox'  checked><label for='section-b48426f8-0481-40db-9d7b-716ce590e816' class='xr-section-summary' >Data variables: <span>(1)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>deep_temp</span></div><div class='xr-var-dims'>(age)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>9.18 nan 9.96 ... 9.6 11.45 8.63</div><input id='attrs-414da86f-1326-4c10-8d23-ce1c895e8179' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-414da86f-1326-4c10-8d23-ce1c895e8179' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-f11ad97c-1be1-4589-9261-22e44c4687f2' class='xr-var-data-in' type='checkbox'><label for='data-f11ad97c-1be1-4589-9261-22e44c4687f2' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>description :</span></dt><dd>BWT_degC</dd><dt><span>variableName :</span></dt><dd>deep.temp</dd><dt><span>variableType :</span></dt><dd>inferred</dd><dt><span>units :</span></dt><dd>degC</dd><dt><span>measurementMaterial :</span></dt><dd>MgCa</dd><dt><span>sensorSpecies :</span></dt><dd>H. elegans</dd><dt><span>calibrationEquation :</span></dt><dd>Mg/Ca = 0.31 ± 0.06 exp. (0.14 ± 0.01) BWT</dd><dt><span>calibrationDOI :</span></dt><dd>10.1016/j.marmicro.2015.10.001</dd><dt><span>hasPubDOI :</span></dt><dd>10.1016/j.palaeo.2016.09.010</dd><dt><span>hasDataLink :</span></dt><dd>https://doi.pangaea.de/10.1594/PANGAEA.864731</dd><dt><span>TSid :</span></dt><dd>RPfJpqV9Evf</dd><dt><span>hasResolution :</span></dt><dd>{&#x27;hasMinValue&#x27;: 0.30914322675820216, &#x27;hasMaxValue&#x27;: 6.603659408264199, &#x27;hasMeanValue&#x27;: 1.1697927260271925, &#x27;hasMedianValue&#x27;: 0.8139695747599021}</dd><dt><span>hasMinValue :</span></dt><dd>6.13</dd><dt><span>hasMaxValue :</span></dt><dd>13.37</dd><dt><span>hasMeanValue :</span></dt><dd>9.349107142857141</dd><dt><span>hasMedianValue :</span></dt><dd>9.3</dd></dl></div><div class='xr-var-data'><pre>array([ 9.18,   nan,  9.96,   nan,   nan, 10.46,  9.52, 10.32,   nan,
            11.15,  9.85,  9.68,  9.44,  9.76,  9.52,  9.31,  9.78,   nan,
             8.92,  9.05, 10.62,  8.77,  9.22, 11.09,  9.63, 11.68,  8.23,
             9.12,  9.8 ,  7.83,  9.27,  8.5 ,  9.6 ,  7.53,  7.52,  7.66,
@@ -779,14 +633,14 @@ available data. You can chose whether you want to work on the ``age`` or
             9.29,  8.22,  7.84,  8.52,  6.87,  8.49,  8.63,  8.27,  7.61,
              nan,  7.51,  6.99,  8.07,  7.53,  8.  ,   nan,  6.13,  7.99,
             8.95,  9.52,  9.47,  8.67,   nan,  8.55,   nan,   nan,   nan,
-           11.2 ,   nan, 11.5 ,   nan, 10.5 , 11.83,  9.6 , 11.45,  8.63])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-db207ad7-0b42-46ab-896e-6f15f67db946' class='xr-section-summary-in' type='checkbox'  ><label for='section-db207ad7-0b42-46ab-896e-6f15f67db946' class='xr-section-summary' >Indexes: <span>(1)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-index-name'><div>age</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-0448a35d-bbea-4a82-8b3b-34496715471e' class='xr-index-data-in' type='checkbox'/><label for='index-0448a35d-bbea-4a82-8b3b-34496715471e' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([ 4.2725881652832,  7.4380006161499, 10.8762475735474, 13.0932547946167,
+           11.2 ,   nan, 11.5 ,   nan, 10.5 , 11.83,  9.6 , 11.45,  8.63])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-5f47d9a9-13a1-4263-8d8c-d2249bcc0c6f' class='xr-section-summary-in' type='checkbox'  ><label for='section-5f47d9a9-13a1-4263-8d8c-d2249bcc0c6f' class='xr-section-summary' >Indexes: <span>(1)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-index-name'><div>age</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-640dd6df-704a-4914-a37e-9c23552c7ec7' class='xr-index-data-in' type='checkbox'/><label for='index-640dd6df-704a-4914-a37e-9c23552c7ec7' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([ 4.2725881652832,  7.4380006161499, 10.8762475735474, 13.0932547946167,
            14.2549212253761, 15.5368790813446, 16.5332047668076, 17.5072823760605,
            18.5388246795559, 19.3076620929241,
            ...
            120.720018986987, 121.936357457498, 123.106417314873, 124.360599665606,
            125.596404060898, 126.864389725994, 128.133559212041, 129.375633191786,
             130.61020257622,              nan],
-          dtype=&#x27;float64&#x27;, name=&#x27;age&#x27;, length=162))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-e6a2ed28-cc63-464e-a5d0-712831a0f4c4' class='xr-section-summary-in' type='checkbox'  checked><label for='section-e6a2ed28-cc63-464e-a5d0-712831a0f4c4' class='xr-section-summary' >Attributes: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>description :</span></dt><dd>Measured paleo data from GIK18471_1.</dd><dt><span>note :</span></dt><dd>Variables were renamed, e.g. &#x27;planktonic.d18O-1&#x27; --&gt; &#x27;planktonic_d18O_1&#x27;</dd></dl></div></li></ul></div></div>
+          dtype=&#x27;float64&#x27;, name=&#x27;age&#x27;, length=162))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-d88f652e-56ac-4b34-b8bc-552626fad0db' class='xr-section-summary-in' type='checkbox'  checked><label for='section-d88f652e-56ac-4b34-b8bc-552626fad0db' class='xr-section-summary' >Attributes: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>description :</span></dt><dd>Measured paleo data from GIK18471_1.</dd><dt><span>note :</span></dt><dd>Variables were renamed, e.g. &#x27;planktonic.d18O-1&#x27; --&gt; &#x27;planktonic_d18O_1&#x27;</dd></dl></div></li></ul></div></div>
 
 
 
@@ -811,7 +665,7 @@ argument ``quiet=True``. The attributes are also integrated into the
 
 
 
-.. image:: pics_tutorial1/output_17_0.png
+.. image:: output_18_0.png
 
 
 Next, we create a small map plot of the chosen records. For that, we
@@ -824,7 +678,7 @@ first extract their positions:
     lat_list = []
     
     # iterate through object list
-    for site in ObsData_tropics:
+    for site in obs_data_tropics:
         lon, lat, el = site.coords
         lon_list.append(lon)
         lat_list.append(lat)
@@ -845,13 +699,13 @@ first extract their positions:
     gl.xlocator = plt.FixedLocator(np.arange(-180,210,30))
     gl.ylocator = plt.FixedLocator(np.arange(-90,90,30))
     
-    plt.title("Records in ObsData_tropics")
+    plt.title("Records in obs_data_tropics")
     
     plt.show()
 
 
 
-.. image:: pics_tutorial1/output_20_0.png
+.. image:: output_21_0.png
 
 
 2) Chosen by file name
@@ -862,22 +716,22 @@ In this case, we already know the sites that we want to analyze.
 .. code:: ipython3
 
     # list of our sites
-    sites = ["SU81_18.lpd", "TR163_22.lpd", "SO201_2_12KL.lpd", "MD98_2181.lpd", "MD01_2378.lpd", "GeoB1711_4.lpd"]
+    sites = ["SU81_18.lpd", "TR163_22.lpd", "SO201_2_12KL.lpd", "MD98_2181.lpd", "GeoB1711_4.lpd"]
 
 .. code:: ipython3
 
-    # initialize the ObsData object as list:
-    ObsData = cupsm.get_records_df(df=proxy_overview_table, file_name=sites)
+    # initialize the obs_data object as list:
+    obs_data = cupsm.get_records_df(df=proxy_overview_table, file_name=sites)
     
-    print(f"The object is of type {type(ObsData)}.")
+    print(f"The object is of type {type(obs_data)}.")
     
     # example printout:
-    ObsData[1].info()
+    obs_data[1].info()
 
 
 .. parsed-literal::
 
-    I return a list with 6 record objects at None +/- None.
+    I return a list with 5 record objects at None +/- None.
     The object is of type <class 'list'>.
     
     marine sediment record TR163_22 (0.94 - 128.52 ka)
@@ -887,24 +741,24 @@ In this case, we already know the sites that we want to analyze.
                 
 
 
-Alternatively, you can initialize the ObsData object as a dictionary,
+Alternatively, you can initialize the obs_data object as a dictionary,
 where the site name points to the proxy class object. We recommend this
 method because the sites are directly identifiable.
 
 .. code:: ipython3
 
-    # One can also initialize the ObsData object as dictionary, where the site name points to the proxy class object:
-    ObsData = cupsm.get_records_df(df=proxy_overview_table, file_name=sites, return_as="dictionary")
+    # One can also initialize the obs_data object as dictionary, where the site name points to the proxy class object:
+    obs_data = cupsm.get_records_df(df=proxy_overview_table, file_name=sites, return_as="dictionary")
     
-    print(f"The object is of type {type(ObsData)}.")
+    print(f"The object is of type {type(obs_data)}.")
     
     # example printout:
-    ObsData["TR163_22"].info()
+    obs_data["TR163_22"].info()
 
 
 .. parsed-literal::
 
-    I return a dictionary with 6 record objects at None +/- None.
+    I return a dictionary with 5 record objects at None +/- None.
     The object is of type <class 'dict'>.
     
     marine sediment record TR163_22 (0.94 - 128.52 ka)

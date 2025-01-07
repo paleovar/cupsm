@@ -102,9 +102,6 @@ Finally, import the required packages.
     import cartopy
     import cartopy.crs as ccrs
 
-import matplotlib.cm as cm from matplotlib.colors import Normalize from
-matplotlib.colors import LinearSegmentedColormap import cartopy import
-cartopy.crs as ccrs from cartopy.util import add_cyclic_point
 
 1. Initialize obs_data
 ----------------------
@@ -123,13 +120,6 @@ Here, we reuse the code of the Tutorial 1.
     
     # get the obs_data object
     obs_data = cupsm.get_records_df(df=proxy_overview_table, file_name=sites, return_as="dictionary")
-
-
-.. parsed-literal::
-
-    The .proxy_meta_data.pkl file is already present in /data/projects/nfdi4earth/ and is returned.
-    For updating the file, run with the update=True
-    I return a dictionary with 5 record objects at None +/- None.
 
 
 2. Initialize sim_data
@@ -1361,15 +1351,14 @@ is a subclass of the ``site_object`` - the ``target`` using the
 ``create_target()`` method. Once created, the ``target`` is available
 via ``site_object.target``.
 
-The target object creator accepts the following keywords: -
-``record_var``: string; the variable name of the paleo dataset -
-``sim_var``: string; the variable name of the simulation dataset -
-``habitatSeason``: string or list of integers; - string; valid keywords
-are “summer”, “winter” or “annual”. Refers to the local season
-(e.g. austral summer is summer). - list of integers; indices of the
-month for which the paleo data are representative (for example, for
-boreal summer temperatures, month_i could be [7,8,9] for samples taken
-in July, August and September).
+The target object creator accepts the following keywords: 
+
+ - ``record_var``: string; the variable name of the paleo dataset 
+ - ``sim_var``: string; the variable name of the simulation dataset 
+ - ``habitatSeason``: string or list of integers; 
+     - string; valid keywords are “summer”, “winter” or “annual”. Refers to the local season (e.g. austral summer is summer). 
+     - list of integers; indices of the month for which the paleo data are representative (for example, for boreal summer temperatures, month_i could be [7,8,9] for samples taken in July, August and September).
+
 
 .. code:: ipython3
 
@@ -1427,14 +1416,11 @@ in July, August and September).
 4. Apply operators
 ------------------
 
-Currently there are three types of operators implemented: - Space
-operators (``field2site``) that map the spatial fields of the
-``sim_data`` onto the spatial structure of the ``site_objects``. -
-Chronology operators (``time2chron``) that map data from the regular
-``sim_data`` time axis to the irregular ``site_object`` time axis. -
-Variable operators that transform the data in ``sim_data`` to mimic
-uncertainties from the proxy-climate relationship and archival processes
-(see Tutorial 3).
+Currently there are three types of operators implemented: 
+
+ - Space operators (``field2site``) that map the spatial fields of the ``sim_data`` onto the spatial structure of the ``site_objects``. 
+ - Chronology operators (``time2chron``) that map data from the regular ``sim_data`` time axis to the irregular ``site_object`` time axis. 
+ - Variable operators that transform the data in ``sim_data`` to mimic uncertainties from the proxy-climate relationship and archival processes (see Tutorial 3).
 
 First, we will explore the space and chronology operators for a shorter
 section of the ``sim_data`` and finally apply both operators in a
@@ -2002,9 +1988,9 @@ the ``sim_data``.
 ~~~~~~~~~~~~~~~~~~
 
 When applying the space operator, you can choose between two
-interpolation methods: - ``nn``: nearest grid cell which is not nan -
-``dist``: distance weighted mean over grid cells which are within radius
-(default: 500 km)
+interpolation methods:
+ - ``nn``: nearest grid cell which is not nan 
+ - ``dist``: distance weighted mean over grid cells which are within radius (default: 500 km)
 
 The radius for the method ``dist`` can be set by the ``radius_km``
 keyword.
@@ -2097,10 +2083,10 @@ this point.
 
 When applying the chronologies operator, you can choose between two
 methods for mapping the data from the regular sim_data time axis onto
-the irregular site_object time axis: - ``point2point``: point to point
-mapping - ``slice2point``: slice to point mapping; assumes time slices
-in the sim_data time axis that are representative of the measured
-sample, these are mapped to points in the chronologies.
+the irregular site_object time axis: 
+
+ - ``point2point``: point to point mapping 
+ - ``slice2point``: slice to point mapping; assumes time slices in the sim_data time axis that are representative of the measured sample, these are mapped to points in the chronologies.
 
 For ``slice2point``, there are two sampling methods available,
 ``adjacent`` and ``distant``. The following graphic explains how the
@@ -2239,7 +2225,7 @@ Here, we will apply the operators sequentially in a for loop for our
 five example sites.
 
 To parallize the loop, we will make use of the
-```dask`` <https://docs.dask.org/en/stable/>`__ package. If you want to
+`dask <https://docs.dask.org/en/stable/>`__ package. If you want to
 read more about parallelized for loops in dask, check out dask’s
 `tutorial <https://tutorial.dask.org/03_dask.delayed.html>`__ on it!
 
@@ -2857,16 +2843,6 @@ for the chron operator:
     from dask.distributed import Client
     client = Client(n_workers=16)
     client
-
-
-.. parsed-literal::
-
-    /home/mracky/miniconda3/envs/condasky_p311/lib/python3.11/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
-    Perhaps you already have a cluster running?
-    Hosting the HTTP server on port 45381 instead
-      warnings.warn(
-
-
 
 
 .. raw:: html
@@ -3731,26 +3707,6 @@ for the chron operator:
 
 
 
-.. parsed-literal::
-
-    {'tcp://127.0.0.1:32863': None,
-     'tcp://127.0.0.1:33115': None,
-     'tcp://127.0.0.1:34671': None,
-     'tcp://127.0.0.1:34857': None,
-     'tcp://127.0.0.1:37383': None,
-     'tcp://127.0.0.1:38205': None,
-     'tcp://127.0.0.1:38375': None,
-     'tcp://127.0.0.1:39987': None,
-     'tcp://127.0.0.1:40163': None,
-     'tcp://127.0.0.1:40531': None,
-     'tcp://127.0.0.1:40749': None,
-     'tcp://127.0.0.1:42133': None,
-     'tcp://127.0.0.1:42513': None,
-     'tcp://127.0.0.1:42529': None,
-     'tcp://127.0.0.1:45379': None,
-     'tcp://127.0.0.1:46829': None}
-
-
 
 .. code:: ipython3
 
@@ -3833,14 +3789,6 @@ grab a drink. On our machine, the computation took about one minute.
 
 .. parsed-literal::
 
-    /home/mracky/miniconda3/envs/condasky_p311/lib/python3.11/site-packages/distributed/client.py:3162: UserWarning: Sending large graph of size 23.65 MiB.
-    This may cause some slowdown.
-    Consider scattering data ahead of time and using futures.
-      warnings.warn(
-
-
-.. parsed-literal::
-
     CPU times: user 4.13 s, sys: 936 ms, total: 5.06 s
     Wall time: 54.9 s
 
@@ -3850,14 +3798,6 @@ grab a drink. On our machine, the computation took about one minute.
     %%time
     
     resampled_sim_data = dask.compute(resampled_sim_data)
-
-
-.. parsed-literal::
-
-    /home/mracky/miniconda3/envs/condasky_p311/lib/python3.11/site-packages/distributed/client.py:3162: UserWarning: Sending large graph of size 23.65 MiB.
-    This may cause some slowdown.
-    Consider scattering data ahead of time and using futures.
-      warnings.warn(
 
 
 .. parsed-literal::
