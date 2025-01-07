@@ -184,8 +184,7 @@ Short explanation of the available attributes and methods:
  - ``info``: prints a basic overview of the record 
  - ``load``: loads all paleo/proxy data and age model data and combines them in one ``xarray`` ``DataSet`` 
  - ``load_chron_data``: loads the age model data 
- - ``laod_paleo_data``: loads the proxy data, data can be chosen by ``data_set`` parameter. You can put ``"all"`` to load all available data. You can chose whether you want to work on the ``age`` or
-``depth`` coordinate with the ``coord`` keyword argument.
+ - ``laod_paleo_data``: loads the proxy data, data can be chosen by ``data_set`` parameter. You can put ``"all"`` to load all available data. You can chose whether you want to work on the ``age`` or ``depth`` coordinate with the ``coord`` keyword argument.
 
 .. code:: ipython3
 
@@ -665,7 +664,7 @@ argument ``quiet=True``. The attributes are also integrated into the
 
 
 
-.. image:: output_18_0.png
+.. image:: pics_tutorial1/output_18_0.png
 
 
 Next, we create a small map plot of the chosen records. For that, we
@@ -705,7 +704,7 @@ first extract their positions:
 
 
 
-.. image:: output_21_0.png
+.. image:: pics_tutorial1/output_21_0.png
 
 
 2) Chosen by file name

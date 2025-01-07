@@ -1356,6 +1356,7 @@ The target object creator accepts the following keywords:
  - ``record_var``: string; the variable name of the paleo dataset 
  - ``sim_var``: string; the variable name of the simulation dataset 
  - ``habitatSeason``: string or list of integers; 
+ 
      - string; valid keywords are “summer”, “winter” or “annual”. Refers to the local season (e.g. austral summer is summer). 
      - list of integers; indices of the month for which the paleo data are representative (for example, for boreal summer temperatures, month_i could be [7,8,9] for samples taken in July, August and September).
 
@@ -2219,7 +2220,7 @@ ensemble is reduced for the ``slice2point`` method because it introduces
 more smoothing.
 
 4.3 Apply operators for obs_data
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Here, we will apply the operators sequentially in a for loop for our
 five example sites.
