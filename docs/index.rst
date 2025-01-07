@@ -63,6 +63,8 @@ Documentation
 * :doc:`concepts`
 * :doc:`objects`
 * :doc:`tutorial1`
+* :doc:`tutorial2`
+* :doc:`tutorial3`
 * :doc:`autoapi/index`
 
 
@@ -74,6 +76,8 @@ Documentation
    concepts
    objects
    tutorial1
+   tutorial2
+   tutorial3
 
 License
 ---------------------------------------
