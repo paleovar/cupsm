@@ -108,7 +108,7 @@ Finally, import the required packages.
 
 **as dictionary, keys are the site names and values the site_objects**
 
-Here, we reuse the code of the Tutorial 1.
+Here, we reuse the code of Tutorial 1.
 
 .. code:: ipython3
 
@@ -1430,13 +1430,13 @@ the ``sim_data``.
 
 .. code:: ipython3
 
-    # define an examle site_object
+    # define an example site_object
     
     example_site_object = obs_data[example_site]
 
 .. code:: ipython3
 
-    # define a shorter section (500 years from 16 ka to 15.5 ka)
+    # define a shorter section (1000 years from 16 ka to 15 ka)
     
     example_sim_data = sim_data.where(sim_data['time.year'].isin(np.arange(16000,15000,-1)), drop=True)
     example_sim_data
@@ -2093,6 +2093,10 @@ the irregular site_object time axis:
 For ``slice2point``, there are two sampling methods available,
 ``adjacent`` and ``distant``. The following graphic explains how the
 different mappings work.
+
+
+.. image:: pics_tutorial2/chron_operators_illustration.png
+
 
 .. code:: ipython3
 
