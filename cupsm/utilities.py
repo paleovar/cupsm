@@ -14,7 +14,7 @@ def do_to_180(dataobject, lon_name = 'lon', quiet=True):
     
     Parameters:
     ------------------------------
-    :dataobject:   xarray data object, can be DataSet or DataArray
+    :dataobject:   xarray data object, can be Dataset or DataArray
     :lon_name:     string; name of the longitude dimension, default='lon'
     :quiet: boolean; print (False) or suppress (True) diagnostic output. Default is False.
     """

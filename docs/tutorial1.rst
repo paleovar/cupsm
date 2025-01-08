@@ -101,7 +101,7 @@ explore the obs_data object on the fly:
 
  1) Chosen by location
     
-    -) Explore obs_data object
+    - Explore obs_data object
 
  2) Chosen by file name
 
@@ -184,7 +184,7 @@ Short explanation of the available attributes and methods:
  - ``info``: prints a basic overview of the record 
  - ``load``: loads all paleo/proxy data and age model data and combines them in one ``xarray`` ``DataSet`` 
  - ``load_chron_data``: loads the age model data 
- - ``laod_paleo_data``: loads the proxy data, data can be chosen by ``data_set`` parameter. You can put ``"all"`` to load all available data. You can chose whether you want to work on the ``age`` or ``depth`` coordinate with the ``coord`` keyword argument.
+ - ``load_paleo_data``: loads the proxy data, data can be chosen by ``data_set`` parameter. You can put ``"all"`` to load all available data. You can chose whether you want to work on the ``age`` or ``depth`` coordinate with the ``coord`` keyword argument.
 
 .. code:: ipython3
 
@@ -211,7 +211,7 @@ Short explanation of the available attributes and methods:
 
 .. parsed-literal::
 
-    Variables were renamed to make them accessible via as xarray.dataset attributes, e.g. 'planktonic.d18O-1' --> 'planktonic_d18O_1' 
+    Variables were renamed to make them accessible via xarray.dataset attributes, e.g. 'planktonic.d18O-1' --> 'planktonic_d18O_1' 
 
 
 
@@ -643,9 +643,9 @@ Short explanation of the available attributes and methods:
 
 
 
-**NOTE:** Variables were renamed to make them accessible via as
+**NOTE:** Variables were renamed to make them accessible via
 xarray.dataset attributes, e.g. ‘planktonic.d18O-1’ –>
-‘planktonic_d18O_1’. The warning can be suppressed by using the keyword
+‘planktonic_d18O_1’. This warning can be suppressed by using the keyword
 argument ``quiet=True``. The attributes are also integrated into the
 ``xarray`` ``DataSet`` but left unchanged from the origin LiPD file.
 

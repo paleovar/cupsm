@@ -20,7 +20,7 @@ def white_noise(sim_data,num_ensemble,mu=0,sigma=1):
     Creates white noise by filling an array in shape of the input data with randomly drawn values from a normal (Gaussian) distribution. 
     Adds this white noise to the input data and saves the result as a new (white noise) ensemble member. 
     Multiple new ensemble members can be created. The original input data is kept as the first ensemble member. 
-    The result is returned as a xarray Dataarray.
+    The result is returned as a xarray DataArray.
     
     Parameters:
     ------------------------------
