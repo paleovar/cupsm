@@ -1,6 +1,7 @@
 """
 - Code for regridding the example data
 - function "transfer_timeaxis_deglac"
+- function "plot_results"
 """
 
 # ~~~~~~~~~~~~~~~~~~~
@@ -148,6 +149,7 @@ def plot_results(site_list, obs_data, res_sim_data, for_obs_data, mapping_vars):
                 if i == 1:
                     ax.plot([], [] ,color="silver", label="Simulation")
                     ax.plot([], [] ,color="teal", label="Temperature\nreconstruction")
+                    ax.plot([], [] , color="black", lw=0.5, label="Temperature\nreconstruction\n(age model median)")
                     ax.plot([], [] ,color="blue", label="Forward-modeled\nproxy time series")
                     ax.legend(loc="center right", bbox_to_anchor=(2,0.5), frameon=False)
                             

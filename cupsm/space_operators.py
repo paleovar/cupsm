@@ -16,9 +16,9 @@ from geopy.distance import great_circle
 # ~~~~~~~~~~~~~~~~~~~~~~
 # Space operator 
 # ~~~~~~~~~~~~~~~~~~~~~~
-def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False):
+def field2site(sim_data, site_object, method="dist", radius_km=500, plot_mask=False):
     """
-    Interpolates the simulation data to the given site location. 
+    Interpolates the simulation data to the location of the given site. 
     Returns an xarray DataArray.
 
     Notes:
@@ -30,7 +30,7 @@ def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False
     Parameters:
     ------------------------------
     :sim_data:	xarray DataArray of simulation data of interest.
-    :site_obj:	Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details).
+    :site_object:	Site object of interest (python class object created from lipd file of interest by applying cupsm.get_records_df(), see cupsm.get_records_df() documentation for more details).
     :method:	string; Method for interpolation; available keywords: "dist" (distance weighted
                 mean over grid cells which are within radius) and "nn" (nearest grid cell
                 which is not nan). Default is "dist".
@@ -39,7 +39,7 @@ def field2site(sim_data, site_obj, method="dist", radius_km=500, plot_mask=False
     :plot_mask:	boolean; optional diagnostic plot of the weighting mask. Default is False.
     """
     # set variables
-    x,y,_ = site_obj.coords
+    x,y,_ = site_object.coords
     field = do_to_180(sim_data) # set longitude axis to -180, 180 as it standard in lipd
     lon = field.coords["lon"]
     lat = field.coords["lat"]
